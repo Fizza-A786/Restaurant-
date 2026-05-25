@@ -1,8 +1,8 @@
 
-import NavbarTop from "./component/Common/NavbarTop"
-import Navbar from "./component/Common/Navbar"
+import NavbarTop from "./Common/NavbarTop"
+import Navbar from "./Common/Navbar"
 import Home from "./Pages/Home"
-import Footer from "./component/Common/Footer"
+import Footer from "./Common/Footer"
 
 const App = () => {
   return (
