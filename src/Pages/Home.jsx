@@ -6,6 +6,7 @@ import CustomerCareSection from '../components/Home/CustomerCareSection';
 import sectionImg from '../assets/Section-01.png';
 import WaveformDemoSection from '../components/Home/WaveformDemoSection';
 import RevenueLeakageSection from '../components/Home/RevenueLeakageSection';
+import WelcomeCTASection from '../components/Home/Welcomectasection ';
 
 export default function Hero() {
   return (
@@ -43,6 +44,7 @@ export default function Hero() {
       <CustomerCareSection />
       <WaveformDemoSection />
       <RevenueLeakageSection />
+      <WelcomeCTASection/>
 
     </main>
   );

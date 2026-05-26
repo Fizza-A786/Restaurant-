@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FaChevronDown, FaBars, FaTimes, FaRobot, FaGlobe } from 'react-icons/fa';
+import { FaChevronDown, FaBars, FaTimes, FaRobot } from 'react-icons/fa';
 
 // ── Language Switcher ────────────────────────────────────────────────────────
 const LANGUAGES = [
@@ -62,19 +62,70 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
   );
 };
 
+// ── Simple dropdown used for Solutions / Platform / Areas (moved outside Navbar)
+const SimpleDropdown = ({ items, viewMoreHref }) => (
+  <div className="absolute top-full left-0 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 max-h-[70vh] overflow-y-auto">
+    {items.map((item) => (
+      <a
+        key={item.href}
+        href={item.href}
+        className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+      >
+        {item.label}
+      </a>
+    ))}
+    {viewMoreHref && (
+      <a
+        href={viewMoreHref}
+        className="block px-4 py-2 text-sm text-emerald-600 font-semibold border-t border-gray-100 mt-1 pt-3 hover:bg-emerald-50 transition-colors"
+      >
+        View More →
+      </a>
+    )}
+  </div>
+);
+
+// ── Language dropdown for mobile (moved outside Navbar) -- requires props from Navbar
+const MobileLangDropdown = ({ selectedLang, openDropdown, toggleDropdown, setSelectedLang }) => (
+  <div className="flex flex-col">
+    <button
+      onClick={() => toggleDropdown('lang-mobile')}
+      className="flex items-center justify-between text-gray-800 font-medium p-2 hover:bg-gray-50 rounded-lg cursor-pointer w-full text-left"
+    >
+      <div className="flex items-center gap-2">
+        <span>{selectedLang.flag}</span>
+        <span>{selectedLang.label}</span>
+      </div>
+      <FaChevronDown size={12} className={`text-gray-500 transition-transform ${openDropdown === 'lang-mobile' ? 'rotate-180' : ''}`} />
+    </button>
+    {openDropdown === 'lang-mobile' && (
+      <div className="pl-4 mt-1 flex flex-col gap-1">
+        {LANGUAGES.map((lang) => (
+          <button
+            key={lang.code}
+            onClick={() => { setSelectedLang(lang); toggleDropdown('lang-mobile'); }}
+            className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors text-left ${
+              selectedLang.code === lang.code
+                ? 'text-emerald-600 bg-emerald-50 font-medium'
+                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'
+            }`}
+          >
+            <span>{lang.flag}</span>
+            <span>{lang.label}</span>
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
 // ── Main Navbar ──────────────────────────────────────────────────────────────
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [hoveredAgentIndex, setHoveredAgentIndex] = useState(0);
   const [selectedLang, setSelectedLang] = useState(LANGUAGES[0]);
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -176,62 +227,7 @@ const Navbar = () => {
     },
   ];
 
-  // ── Simple dropdown used for Solutions / Platform / Areas ───────────────────
-  const SimpleDropdown = ({ items, viewMoreHref }) => (
-    <div className="absolute top-full left-0 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 max-h-[70vh] overflow-y-auto">
-      {items.map((item) => (
-        <a
-          key={item.href}
-          href={item.href}
-          className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
-        >
-          {item.label}
-        </a>
-      ))}
-      {viewMoreHref && (
-        <a
-          href={viewMoreHref}
-          className="block px-4 py-2 text-sm text-emerald-600 font-semibold border-t border-gray-100 mt-1 pt-3 hover:bg-emerald-50 transition-colors"
-        >
-          View More →
-        </a>
-      )}
-    </div>
-  );
 
-  // ── Language dropdown for mobile ────────────────────────────────────────────
-  const MobileLangDropdown = () => (
-    <div className="flex flex-col">
-      <button
-        onClick={() => toggleDropdown('lang-mobile')}
-        className="flex items-center justify-between text-gray-800 font-medium p-2 hover:bg-gray-50 rounded-lg cursor-pointer w-full text-left"
-      >
-        <div className="flex items-center gap-2">
-          <span>{selectedLang.flag}</span>
-          <span>{selectedLang.label}</span>
-        </div>
-        <FaChevronDown size={12} className={`text-gray-500 transition-transform ${openDropdown === 'lang-mobile' ? 'rotate-180' : ''}`} />
-      </button>
-      {openDropdown === 'lang-mobile' && (
-        <div className="pl-4 mt-1 flex flex-col gap-1">
-          {LANGUAGES.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => { setSelectedLang(lang); toggleDropdown('lang-mobile'); }}
-              className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors text-left ${
-                selectedLang.code === lang.code
-                  ? 'text-emerald-600 bg-emerald-50 font-medium'
-                  : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'
-              }`}
-            >
-              <span>{lang.flag}</span>
-              <span>{lang.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
@@ -289,7 +285,7 @@ const Navbar = () => {
                   className={`mt-0.5 text-gray-500 hover:text-emerald-600 transition-transform ${openDropdown === 'solutions' ? 'rotate-180' : ''}`}
                 />
               </button>
-              {openDropdown === 'solutions' && <SimpleDropdown items={solutionsItems} />}
+                      {openDropdown === 'solutions' && <SimpleDropdown items={solutionsItems} />}
             </div>
 
             {/* Platform */}
@@ -491,7 +487,7 @@ const Navbar = () => {
               </div>
               <FaChevronDown size={12} className={`text-gray-500 transition-transform ${openDropdown === 'ai-agents-mobile' ? 'rotate-180' : ''}`} />
             </button>
-            {openDropdown === 'ai-agents-mobile' && (
+              {openDropdown === 'ai-agents-mobile' && (
               <div className="pl-4 mt-1 flex flex-col gap-1">
                 {aiAgents.map((agent) => (
                   <a key={agent.name} href="#" className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
@@ -574,9 +570,9 @@ const Navbar = () => {
           <div className="border-t border-gray-100 pt-4 flex flex-col gap-3 mt-2">
 
             {/* Language Switcher Mobile */}
-            <div className="px-1">
+              <div className="px-1">
               <p className="text-xs text-gray-400 mb-1 px-2">Language</p>
-              <MobileLangDropdown />
+              <MobileLangDropdown selectedLang={selectedLang} openDropdown={openDropdown} toggleDropdown={toggleDropdown} setSelectedLang={setSelectedLang} />
             </div>
 
             <button className="w-full text-center text-gray-700 font-medium py-2 hover:bg-gray-50 rounded-lg">
