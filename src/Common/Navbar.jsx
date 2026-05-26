@@ -3,12 +3,19 @@ import { FaChevronDown, FaBars, FaTimes, FaRobot, FaGlobe } from 'react-icons/fa
 
 // ── Language Switcher ────────────────────────────────────────────────────────
 const LANGUAGES = [
-  { code: 'en', label: 'English', flag: '🇺🇸' },
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
-  { code: 'fr', label: 'Français', flag: '🇫🇷' },
-  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
-  { code: 'ar', label: 'العربية', flag: '🇸🇦' },
+  { code: 'en', label: 'English', flag: 'src/assets/flags/US.svg' },
+  { code: 'es', label: 'Español (Spanish)', flag: 'src/assets/flags/ES.svg' },
+  { code: 'fr', label: 'Français (French)', flag: 'src/assets/flags/FR.svg' },
+  { code: 'de', label: 'Deutsch (German)', flag: 'src/assets/flags/DE.svg' },
+  { code: 'it', label: 'Italiano (Italian)', flag: 'src/assets/flags/IT.svg' },
+  { code: 'pt', label: 'Português (Portuguese)', flag: 'src/assets/flags/PT.svg' },
+  { code: 'ja', label: '日本語 (Japanese)', flag: 'src/assets/flags/JP.svg' },
+  { code: 'zh', label: '中文 (Chinese, Simplified)', flag: 'src/assets/flags/CN.svg' },
+  { code: 'ko', label: '한국어 (Korean)', flag: 'src/assets/flags/KR.svg' },
+  { code: 'bn', label: 'বাংলা (Bengali)', flag: 'src/assets/flags/BD.svg' },
+  { code: 'ar', label: 'See more languages', flag: ' →' } // Kept from your original array
 ];
+
 
 const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language' }) => {
   const [selected, setSelected] = useState(LANGUAGES[0]);
@@ -30,7 +37,7 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
         onClick={() => toggleDropdown(dropdownId)}
         className="flex items-center gap-1.5 text-gray-700 hover:text-emerald-600 transition-colors text-lg bg-transparent border-none cursor-pointer"
       >
-        <span className="text-base">{selected.flag}</span>
+        <img className="h-[12px] w-[18px]" src={LANGUAGES[0].flag} alt={selected.label} />
         <span>{selected.label}</span>
         <FaChevronDown
           size={10}
@@ -38,7 +45,15 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
         />
       </button>
       {openDropdown === dropdownId && (
-        <div className="absolute top-full left-0 mt-3 w-44 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2">
+        <div className={`
+  absolute right-[-30px] mt-1 py-1 rounded-lg shadow-lg min-w-[200px] max-h-[60vh] overflow-y-auto z-50 bg-white border border-gray-200
+  [&::-webkit-scrollbar]:w-1
+  [&::-webkit-scrollbar-track]:bg-transparent
+  [&::-webkit-scrollbar-thumb]:bg-[#316945]
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [scrollbar-width:thin]
+  [scrollbar-color:#316945_transparent]
+`}>
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}
@@ -46,14 +61,21 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
                 setSelected(lang);
                 toggleDropdown(dropdownId);
               }}
-              className={`w-full text-left flex items-center gap-2 px-4 py-2 text-sm transition-colors ${
-                selected.code === lang.code
+              className={`w-full text-left flex items-center gap-2 px-4 py-2 text-sm transition-colors ${selected.code === lang.code
                   ? 'text-emerald-600 bg-emerald-50 font-medium'
                   : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'
-              }`}
+                }`}
             >
-              <span>{lang.flag}</span>
-              <span>{lang.label}</span>
+              {
+                lang.code === 'ar' ? (
+                  <span className="block text-emerald-600 font-medium text-sm">{lang.label} {' →'}</span>
+                ) : (
+                  <>
+                    <img className="h-[12px] w-[18px]" src={lang.flag} alt={lang.label} />
+                    <span>{lang.label}</span>
+                  </>
+                )
+              }
             </button>
           ))}
         </div>
@@ -218,11 +240,10 @@ const Navbar = () => {
             <button
               key={lang.code}
               onClick={() => { setSelectedLang(lang); toggleDropdown('lang-mobile'); }}
-              className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors text-left ${
-                selectedLang.code === lang.code
+              className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors text-left ${selectedLang.code === lang.code
                   ? 'text-emerald-600 bg-emerald-50 font-medium'
                   : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'
-              }`}
+                }`}
             >
               <span>{lang.flag}</span>
               <span>{lang.label}</span>
@@ -237,17 +258,17 @@ const Navbar = () => {
   return (
     <>
       {/* ── NAVBAR BAR ────────────────────────────────────────────────────── */}
-<nav
-  className="absolute left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 rounded-2xl px-8 py-4 transition-all duration-300"
-  style={{
-    top: '54px',
-    background: 'rgba(255,255,255,0.55)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255,255,255,0.3)',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-  }}
->
+      <nav
+        className="absolute left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 rounded-2xl px-8 py-4 transition-all duration-300"
+        style={{
+          top: '54px',
+          background: 'rgba(255,255,255,0.55)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255,255,255,0.3)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+        }}
+      >
         <div className="flex items-center justify-between">
 
           {/* LEFT: Logo */}
@@ -415,11 +436,10 @@ const Navbar = () => {
                     <button
                       onMouseEnter={() => setHoveredAgentIndex(idx)}
                       onClick={() => setHoveredAgentIndex(idx)}
-                      className={`w-full text-left flex items-center gap-2.5 px-5 py-3 transition-colors text-sm ${
-                        hoveredAgentIndex === idx
+                      className={`w-full text-left flex items-center gap-2.5 px-5 py-3 transition-colors text-sm ${hoveredAgentIndex === idx
                           ? 'bg-white/10 text-white'
                           : 'text-white/80 hover:bg-white/5 hover:text-white'
-                      }`}
+                        }`}
                     >
                       <FaRobot className="text-emerald-400 shrink-0" size={16} />
                       <span>{agent.name}</span>
@@ -473,9 +493,8 @@ const Navbar = () => {
 
       {/* ── MOBILE MENU ───────────────────────────────────────────────────── */}
       <div
-        className={`fixed top-[54px] left-1/2 -translate-x-1/2 w-[95%] bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-2xl z-40 lg:hidden transition-all duration-300 transform origin-top overflow-y-auto max-h-[80vh] ${
-          mobileMenuOpen ? 'scale-y-100 opacity-100 visible' : 'scale-y-0 opacity-0 invisible'
-        }`}
+        className={`fixed top-[54px] left-1/2 -translate-x-1/2 w-[95%] bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-2xl z-40 lg:hidden transition-all duration-300 transform origin-top overflow-y-auto max-h-[80vh] ${mobileMenuOpen ? 'scale-y-100 opacity-100 visible' : 'scale-y-0 opacity-0 invisible'
+          }`}
       >
         <div className="flex flex-col p-4 gap-1">
 
