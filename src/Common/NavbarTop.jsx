@@ -1,86 +1,84 @@
-const NavbarTop = () => {
+
+import {
+  Globe,
+  Phone,
+  Sparkles,
+  Zap,
+  Bot,
+} from "lucide-react";
+
+const announcements = [
+  {
+    icon: <Bot size={18} />,
+    text: "AI Agents Now Available",
+  },
+  {
+    icon: <Sparkles size={18} />,
+    text: "Book Your Free Demo",
+  },
+  {
+    icon: <Phone size={18} />,
+    text: "24/7 Customer Support",
+  },
+  {
+    icon: <Zap size={18} />,
+    text: "Boost Productivity with Automation",
+  },
+  {
+    icon: <Globe size={18} />,
+    text: "Scale Globally with Multi-Language AI Agents",
+  },
+];
+
+export default function AnnouncementBanner() {
   return (
     <>
+      {/* Tailwind Custom Animation */}
       <style>
         {`
           @keyframes marquee {
             0% {
-              transform: translateX(0);
+              transform: translateX(0%);
             }
-
             100% {
               transform: translateX(-50%);
             }
           }
 
-          .marquee-wrapper {
-            overflow: hidden;
-            width: 100%;
-            background: #063A2F;
-            color:white;
-            height: 52px;
-            display: flex;
-            align-items: center;
+          .animate-marquee {
+            animation: marquee 25s linear infinite;
           }
 
-          .marquee-content {
-            display: flex;
-            align-items: center;
-            gap: 60px;
-            white-space: nowrap;
-            width: max-content;
-            animation: marquee 35s linear infinite;
-          }
-
-          .marquee-content:hover {
+          .animate-marquee:hover {
             animation-play-state: paused;
           }
         `}
       </style>
 
-      <div className="marquee-wrapper text-white">
+      {/* Top Green Announcement Bar */}
+      <div className="fixed top-0 left-0 w-full z-50 bg-[#063A2F] border-b border-white/10 overflow-hidden h-[50px] flex items-center">
+        
+        {/* Scrolling Content */}
+        <div className="flex whitespace-nowrap animate-marquee min-w-max">
+          
+          {[...announcements, ...announcements].map((item, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-3 px-8 md:px-14 text-white"
+            >
+              {/* Icon */}
+              <div className="text-[#5EE9A5] animate-pulse">
+                {item.icon}
+              </div>
 
-        <div className="marquee-content px-4 text-sm text-white">
-
-          <p>
-            We're excited to announce our business expansion — now available globally
-          </p>
-
-          <p>
-            Multi Agents now live and ready to automate your business
-          </p>
-
-          <p>
-            New: Advanced RAG system with Multi Languages
-          </p>
-
-          <p>
-            AI Automation helping businesses save time and increase sales
-          </p>
-
-          {/* Duplicate for smooth infinite scroll */}
-
-          <p>
-            We're excited to announce our business expansion — now available globally
-          </p>
-
-          <p>
-            Multi Agents now live and ready to automate your business
-          </p>
-
-          <p>
-            New: Advanced RAG system with Multi Languages
-          </p>
-
-          <p>
-            AI Automation helping businesses save time and increase sales
-          </p>
-
+              {/* Text */}
+              <span className="text-sm md:text-[18px] font-medium tracking-wide">
+                {item.text}
+              </span>
+            </div>
+          ))}
         </div>
-
       </div>
     </>
-  )
+  );
 }
-
-export default NavbarTop

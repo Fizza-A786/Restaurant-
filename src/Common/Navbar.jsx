@@ -240,6 +240,7 @@ const Navbar = () => {
 <nav
   className="absolute left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 rounded-2xl px-8 py-4 transition-all duration-300"
   style={{
+    top: '50px',
     background: 'rgba(255,255,255,0.55)',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
@@ -390,7 +391,7 @@ const Navbar = () => {
         <div
           className="fixed left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-40 rounded-b-xl overflow-hidden shadow-2xl"
           style={{
-            top: 'calc(3.5rem + 64px)',
+            top: 'calc(3.5rem + 50px)',
             height: '480px',
             background: 'linear-gradient(180deg, #063A2F 0%, #052d24 100%)',
             border: '1px solid rgba(255,255,255,0.12)',
@@ -472,7 +473,7 @@ const Navbar = () => {
 
       {/* ── MOBILE MENU ───────────────────────────────────────────────────── */}
       <div
-        className={`fixed top-20 left-1/2 -translate-x-1/2 w-[95%] bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-2xl z-40 lg:hidden transition-all duration-300 transform origin-top overflow-y-auto max-h-[80vh] ${
+        className={`fixed top-[50px] left-1/2 -translate-x-1/2 w-[95%] bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-2xl z-40 lg:hidden transition-all duration-300 transform origin-top overflow-y-auto max-h-[80vh] ${
           mobileMenuOpen ? 'scale-y-100 opacity-100 visible' : 'scale-y-0 opacity-0 invisible'
         }`}
       >
