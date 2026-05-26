@@ -1,82 +1,79 @@
-
-import {
-  Globe,
-  Phone,
-  Sparkles,
-  Zap,
-  Bot,
-} from "lucide-react";
-
 const announcements = [
   {
-    icon: <Bot size={18} />,
-    text: "AI Agents Now Available",
+    emoji: "🎉",
+    text: "New: AI Voice Agents now support 25+ languages",
   },
   {
-    icon: <Sparkles size={18} />,
-    text: "Book Your Free Demo",
+    emoji: "⚡",
+    text: "14-Day Free Trial — No credit card required",
   },
   {
-    icon: <Phone size={18} />,
-    text: "24/7 Customer Support",
+    emoji: "🌎",
+    text: "Scale globally with Multi-Language AI agents",
   },
   {
-    icon: <Zap size={18} />,
-    text: "Boost Productivity with Automation",
-  },
-  {
-    icon: <Globe size={18} />,
-    text: "Scale Globally with Multi-Language AI Agents",
+    emoji: "📞",
+    text: "Get a personalized demo — See DaitchPro in action",
   },
 ];
 
 export default function AnnouncementBanner() {
   return (
     <>
-      {/* Tailwind Custom Animation */}
+      {/* Marquee Animation */}
       <style>
         {`
           @keyframes marquee {
-            0% {
-              transform: translateX(0%);
+            from {
+              transform: translateX(0);
             }
-            100% {
+            to {
               transform: translateX(-50%);
             }
           }
 
-          .animate-marquee {
-            animation: marquee 25s linear infinite;
+          .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee 40s linear infinite;
           }
 
-          .animate-marquee:hover {
+          .marquee-track:hover {
             animation-play-state: paused;
           }
         `}
       </style>
 
-      {/* Top Green Announcement Bar */}
-      <div className="fixed top-0 left-0 w-full z-50 bg-[#063A2F] border-b border-white/10 overflow-hidden h-[50px] flex items-center">
-        
-        {/* Scrolling Content */}
-        <div className="flex whitespace-nowrap animate-marquee min-w-max">
-          
-          {[...announcements, ...announcements].map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-3 px-8 md:px-14 text-white"
-            >
-              {/* Icon */}
-              <div className="text-[#5EE9A5] animate-pulse">
-                {item.icon}
-              </div>
+      {/* Banner */}
+      <div className="fixed top-0 left-0 z-50 h-[52px] w-full overflow-hidden border-b border-white/10 bg-[#063A2F] shadow-md">
 
-              {/* Text */}
-              <span className="text-sm md:text-[18px] font-medium tracking-wide">
-                {item.text}
-              </span>
-            </div>
-          ))}
+        {/* Glow Effect */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0B5D49]/20 via-transparent to-[#0B5D49]/20" />
+
+        {/* Marquee Wrapper */}
+        <div className="flex h-full items-center overflow-hidden whitespace-nowrap">
+
+          {/* Animated Track */}
+          <div className="marquee-track">
+
+            {/* Duplicate Content for Infinite Loop */}
+            {[...announcements, ...announcements].map((item, index) => (
+              <div
+                key={index}
+                className="group flex items-center gap-2 px-8 md:px-10"
+              >
+                {/* Emoji */}
+                <span className="text-[20px] transition-transform duration-300 group-hover:scale-125">
+                  {item.emoji}
+                </span>
+
+                {/* Text */}
+                <span className="text-sm  tracking-wide text-white md:text-[16px]">
+                  {item.text}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
