@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { FaChevronDown, FaBars, FaTimes, FaRobot } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-// ── Language Switcher ────────────────────────────────────────────────────────
+// ── Language Switcher Data ───────────────────────────────────────────────────
 const LANGUAGES = [
   { code: 'en', label: 'English', flag: 'src/assets/flags/US.svg', link: '/' },
   { code: 'es', label: 'Español (Spanish)', flag: 'src/assets/flags/ES.svg', link: '/' },
@@ -18,7 +18,6 @@ const LANGUAGES = [
 ];
 
 const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language' }) => {
-  // const [selected, setSelected] = useState(LANGUAGES[0]);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -55,27 +54,27 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
           [scrollbar-color:#316945_transparent]
         `}>
           {LANGUAGES.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => {
-                // setSelected(lang);
-                toggleDropdown(dropdownId);
-              }}
-              className={`w-full text-left flex items-center gap-2 px-4 py-2 text-sm transition-colors`}
-            >
-              {
-                lang.code === 'ar' ? (
-                  <span className="block text-emerald-600 font-medium text-sm">{lang.label} {' →'}</span>
-                ) : (
-                  <>
-                    <Link to={lang.link} className="   text-gray-700 hover:text-emerald-600 transition-colors flex items-center gap-2">
-                    <img className="h-[12px] w-[18px]" src={lang.flag} alt={lang.label} />
-                      <span>{lang.label}</span>
-                    </Link>
-                  </>
-                )
-              }
-            </button>
+            <div key={lang.code} className="w-full">
+              {lang.code === 'ar' ? (
+                <Link
+                  to={lang.link}
+                  onClick={() => toggleDropdown(dropdownId)}
+                  className="block px-4 py-2 text-sm text-emerald-600 font-medium hover:bg-emerald-50 transition-colors"
+                >
+                  {lang.label}
+                </Link>
+              ) : (
+                <button
+                  onClick={() => {
+                    toggleDropdown(dropdownId);
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                >
+                  <img className="h-[12px] w-[18px]" src={lang.flag} alt={lang.label} />
+                  <span>{lang.label}</span>
+                </button>
+              )}
+            </div>
           ))}
         </div>
       )}
@@ -85,29 +84,23 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
 
 // ── Main Navbar ──────────────────────────────────────────────────────────────
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [hoveredAgentIndex, setHoveredAgentIndex] = useState(0);
   const [selectedLang, setSelectedLang] = useState(LANGUAGES[0]);
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+  // Handle clicking outside mobile sidebar menu to auto-close it
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.navbar-dropdown-wrapper')) {
-        setOpenDropdown(null);
+      if (!event.target.closest('.mobile-sidebar-container') && !event.target.closest('.mobile-toggle-btn')) {
+        setMobileMenuOpen(false);
       }
     };
-    if (openDropdown) {
-      setTimeout(() => document.addEventListener('mousedown', handleClickOutside), 10);
+    if (mobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [openDropdown]);
+  }, [mobileMenuOpen]);
 
   const toggleDropdown = (name) => setOpenDropdown(openDropdown === name ? null : name);
 
@@ -197,7 +190,6 @@ const Navbar = () => {
     },
   ];
 
-  // ── Simple dropdown used for Solutions / Platform / Areas ───────────────────
   const SimpleDropdown = ({ items, viewMoreHref }) => (
     <div className="absolute top-full left-0 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 max-h-[70vh] overflow-y-auto">
       {items.map((item) => (
@@ -220,44 +212,55 @@ const Navbar = () => {
     </div>
   );
 
-  // ── Language dropdown for mobile ────────────────────────────────────────────
   const MobileLangDropdown = () => (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <button
         onClick={() => toggleDropdown('lang-mobile')}
-        className="flex items-center gap-2 text-gray-800 text-[15px] p-2 hover:bg-gray-50 rounded-lg cursor-pointer w-full text-left"
+        className="flex items-center justify-center gap-3 text-slate-800 text-2xl font-normal py-4 px-6 w-full text-center hover:bg-slate-200/50 transition-colors"
       >
-        <img className='h-[12px] w-[18px]' src={selectedLang.flag} alt={selectedLang.label} />
+        <img className='h-[18px] w-[26px] object-cover' src={selectedLang.flag} alt={selectedLang.label} />
         <span>{selectedLang.label}</span>
       </button>
       {openDropdown === 'lang-mobile' && (
-        <div className="pl-4 mt-1 flex flex-col gap-1">
-          {LANGUAGES.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => { setSelectedLang(lang); toggleDropdown('lang-mobile'); }}
-              className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors text-left ${selectedLang.code === lang.code
-                ? 'text-emerald-600 bg-emerald-50 font-medium'
-                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'
+        <div className="bg-slate-200/30 flex flex-col w-full border-t border-b border-slate-200/60">
+          {LANGUAGES.map((lang) => {
+            if (lang.code === 'ar') {
+              return (
+                <Link
+                  key={lang.code}
+                  to={lang.link}
+                  onClick={() => { setMobileMenuOpen(false); toggleDropdown(null); }}
+                  className="block text-center py-3 text-lg text-emerald-600 font-medium hover:bg-slate-200 transition-colors"
+                >
+                  {lang.label}
+                </Link>
+              );
+            }
+            return (
+              <button
+                key={lang.code}
+                onClick={() => { setSelectedLang(lang); toggleDropdown('lang-mobile'); }}
+                className={`flex items-center justify-center gap-3 py-3 text-base transition-colors ${
+                  selectedLang.code === lang.code
+                    ? 'text-emerald-600 bg-emerald-50/50 font-medium'
+                    : 'text-slate-600 hover:bg-slate-200'
                 }`}
-            >
-              {lang.code !== 'ar' && <img className='h-[12px] w-[18px]' src={lang.flag} alt={lang.label} />}
-              <Link to=''>
+              >
+                <img className='h-[14px] w-[20px] object-cover' src={lang.flag} alt={lang.label} />
                 <span>{lang.label}</span>
-              </Link>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
   );
 
-  // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <>
-      {/* ── NAVBAR BAR ────────────────────────────────────────────────────── */}
+      {/* ── DESKTOP/MOBILE HEADER BAR ───────────────────────────────────────── */}
       <nav
-        className="absolute md:left-[43px]  w-80 left-[20px] lg:w-[95%] z-50 rounded-2xl px-6 py-4 transition-all duration-300"
+        className="absolute left-1/2 -translate-x-1/2 w-[92%] sm:w-[95%] z-40 rounded-2xl px-6 py-4 transition-all duration-300"
         style={{
           top: '54px',
           background: 'rgba(255,255,255,0.55)',
@@ -268,7 +271,6 @@ const Navbar = () => {
         }}
       >
         <div className="flex items-center justify-between">
-
           {/* LEFT: Logo */}
           <div className="flex items-center h-[30px] gap-2 cursor-pointer">
             <img
@@ -278,9 +280,8 @@ const Navbar = () => {
             />
           </div>
 
-          {/* CENTER: Desktop Navigation */}
+          {/* CENTER: Desktop Links */}
           <div className="hidden lg:flex items-center gap-8">
-            {/* AI Agents */}
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('ai-agents')}
@@ -288,102 +289,70 @@ const Navbar = () => {
               >
                 <FaRobot className="text-emerald-500" />
                 <span>AI Agents</span>
-                <FaChevronDown
-                  size={10}
-                  className={`mt-0.5 text-gray-500 hover:text-emerald-600 transition-transform ${openDropdown === 'ai-agents' ? 'rotate-180' : ''}`}
-                />
+                <FaChevronDown size={10} className={`mt-0.5 text-gray-500 transition-transform ${openDropdown === 'ai-agents' ? 'rotate-180' : ''}`} />
               </button>
             </div>
 
-            {/* Solution */}
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('solutions')}
                 className="flex text-[15px] font-medium items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none"
               >
                 <span>Solution</span>
-                <FaChevronDown
-                  size={10}
-                  className={`mt-0.5 text-gray-500 hover:text-emerald-600 transition-transform ${openDropdown === 'solutions' ? 'rotate-180' : ''}`}
-                />
+                <FaChevronDown size={10} className={`mt-0.5 text-gray-500 transition-transform ${openDropdown === 'solutions' ? 'rotate-180' : ''}`} />
               </button>
               {openDropdown === 'solutions' && <SimpleDropdown items={solutionsItems} />}
             </div>
 
-            {/* Platform */}
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('platform')}
                 className="flex text-[15px] font-medium items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none"
               >
                 <span>Platform</span>
-                <FaChevronDown
-                  size={10}
-                  className={`mt-0.5 text-gray-500 hover:text-emerald-600 transition-transform ${openDropdown === 'platform' ? 'rotate-180' : ''}`}
-                />
+                <FaChevronDown size={10} className={`mt-0.5 text-gray-500 transition-transform ${openDropdown === 'platform' ? 'rotate-180' : ''}`} />
               </button>
               {openDropdown === 'platform' && <SimpleDropdown items={platformItems} />}
             </div>
 
-            {/* Areas We Handle */}
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('areas')}
                 className="flex text-[15px] font-medium items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none"
               >
                 <span>Areas We Handle</span>
-                <FaChevronDown
-                  size={10}
-                  className={`mt-0.5 text-gray-500 hover:text-emerald-600 transition-transform ${openDropdown === 'areas' ? 'rotate-180' : ''}`}
-                />
+                <FaChevronDown size={10} className={`mt-0.5 text-gray-500 transition-transform ${openDropdown === 'areas' ? 'rotate-180' : ''}`} />
               </button>
-              {openDropdown === 'areas' && (
-                <SimpleDropdown items={areasItems} viewMoreHref="/industries" />
-              )}
+              {openDropdown === 'areas' && <SimpleDropdown items={areasItems} viewMoreHref="/industries" />}
             </div>
 
-            {/* Pricing */}
             <a href="#pricing" className="text-[15px] font-medium text-gray-700 hover:text-emerald-600 transition-colors">
               Pricing
             </a>
           </div>
 
-          {/* RIGHT: Language + Auth + CTA */}
+          {/* RIGHT: Desktop Auth Actions */}
           <div className="hidden lg:flex items-center gap-4">
-
-            {/* Language Switcher */}
             <div className="navbar-dropdown-wrapper">
-              <LanguageSwitcher
-                openDropdown={openDropdown}
-                toggleDropdown={toggleDropdown}
-                dropdownId="language"
-              />
+              <LanguageSwitcher openDropdown={openDropdown} toggleDropdown={toggleDropdown} dropdownId="language" />
             </div>
 
             <a href="/login" className="text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors">
               Sign In
             </a>
 
-            {/* Get Started with dropdown */}
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('get-started')}
-                className="inline-flex font-medium items-center justify-center gap-2 h-10 px-6 rounded-xl text-black whitespace-nowrap border border-white opacity-90 bg-[radial-gradient(59.41%_515.38%_at_40.59%_15.83%,rgba(175,217,177,0.89)_0%,rgba(60,153,91,0.89)_100%)] shadow-[0px_0px_30px_rgba(0,0,0,0.15)] backdrop-blur-[39.45px] transition-all"
+                className="inline-flex font-medium items-center justify-center gap-2 h-10 px-6 rounded-xl text-black border border-white opacity-90 bg-[radial-gradient(59.41%_515.38%_at_40.59%_15.83%,rgba(175,217,177,0.89)_0%,rgba(60,153,91,0.89)_100%)] shadow-[0px_0px_30px_rgba(0,0,0,0.15)] backdrop-blur-[39.45px] transition-all"
               >
                 Get Started
-                <FaChevronDown
-                  size={10}
-                  className={`transition-transform ${openDropdown === 'get-started' ? 'rotate-180' : ''}`}
-                />
+                <FaChevronDown size={10} className={`transition-transform ${openDropdown === 'get-started' ? 'rotate-180' : ''}`} />
               </button>
               {openDropdown === 'get-started' && (
                 <div className="absolute top-full right-0 mt-3 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2">
                   {getStartedItems.map((item) => (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
-                    >
+                    <a key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">
                       {item.label}
                     </a>
                   ))}
@@ -392,22 +361,172 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Icon Selector Trigger */}
           <div className="lg:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-gray-700 hover:text-emerald-600 focus:outline-none p-2"
+              className="mobile-toggle-btn text-gray-800 hover:text-emerald-600 focus:outline-none p-2 relative z-50"
             >
-              {mobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+              {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
           </div>
         </div>
       </nav>
 
-      {/* ── AI AGENTS MEGA DROPDOWN (Desktop) ───────────────────────────────── */}
+      {/* ── MOBILE FULL SIDEBAR MENU (Matches Image Design Exactly) ─────────── */}
+      <div
+        className={`mobile-sidebar-container fixed top-0 right-0 h-full w-[280px] sm:w-[320px] bg-[#eef3f7] border-l border-slate-200/80 shadow-2xl z-50 lg:hidden transition-transform duration-300 ease-out flex flex-col justify-start pt-24 overflow-y-auto ${
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col w-full">
+          
+          {/* 1. AI Agents */}
+          <div className="flex flex-col w-full">
+            <button
+              onClick={() => toggleDropdown('ai-agents-mobile')}
+              className={`flex items-center justify-between text-slate-900 text-2xl font-normal py-5 px-8 w-full text-left transition-colors ${
+                openDropdown === 'ai-agents-mobile' ? 'bg-slate-200/70 font-medium' : 'hover:bg-slate-200/40'
+              }`}
+            >
+              <div className="flex items-center gap-3.5">
+                <FaRobot className="text-slate-700" size={22} />
+                <span>AI Agents</span>
+              </div>
+              <FaChevronDown size={14} className={`text-slate-500 transition-transform ${openDropdown === 'ai-agents-mobile' ? 'rotate-180' : ''}`} />
+            </button>
+            {openDropdown === 'ai-agents-mobile' && (
+              <div className="bg-slate-200/20 border-b border-slate-200/50 py-1 flex flex-col w-full">
+                {aiAgents.map((agent) => (
+                  <a key={agent.name} href="#" className="block pl-16 pr-6 py-3 text-lg text-slate-700 hover:bg-slate-200/50 transition-colors">
+                    {agent.name}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 2. Solution */}
+          <div className="flex flex-col w-full">
+            <button
+              onClick={() => toggleDropdown('solutions-mobile')}
+              className={`flex items-center justify-between text-slate-900 text-2xl font-normal py-5 px-8 w-full text-left transition-colors ${
+                openDropdown === 'solutions-mobile' ? 'bg-slate-200/70 font-medium' : 'hover:bg-slate-200/40'
+              }`}
+            >
+              <span className="pl-[36px]">Solution</span>
+              <FaChevronDown size={14} className={`text-slate-500 transition-transform ${openDropdown === 'solutions-mobile' ? 'rotate-180' : ''}`} />
+            </button>
+            {openDropdown === 'solutions-mobile' && (
+              <div className="bg-slate-200/20 border-b border-slate-200/50 py-1 flex flex-col w-full max-h-[250px] overflow-y-auto">
+                {solutionsItems.map((item) => (
+                  <a key={item.href} href={item.href} className="block pl-16 pr-6 py-3 text-lg text-slate-700 hover:bg-slate-200/50 transition-colors">
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 3. Platform */}
+          <div className="flex flex-col w-full">
+            <button
+              onClick={() => toggleDropdown('platform-mobile')}
+              className={`flex items-center justify-between text-slate-900 text-2xl font-normal py-5 px-8 w-full text-left transition-colors ${
+                openDropdown === 'platform-mobile' ? 'bg-slate-200/70 font-medium' : 'hover:bg-slate-200/40'
+              }`}
+            >
+              <span className="pl-[36px]">Platform</span>
+              <FaChevronDown size={14} className={`text-slate-500 transition-transform ${openDropdown === 'platform-mobile' ? 'rotate-180' : ''}`} />
+            </button>
+            {openDropdown === 'platform-mobile' && (
+              <div className="bg-slate-200/20 border-b border-slate-200/50 py-1 flex flex-col w-full">
+                {platformItems.map((item) => (
+                  <a key={item.href} href={item.href} className="block pl-16 pr-6 py-3 text-lg text-slate-700 hover:bg-slate-200/50 transition-colors">
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 4. Areas We Handle */}
+          <div className="flex flex-col w-full">
+            <button
+              onClick={() => toggleDropdown('areas-mobile')}
+              className={`flex items-center justify-between text-slate-900 text-2xl font-normal py-5 px-8 w-full text-left transition-colors ${
+                openDropdown === 'areas-mobile' ? 'bg-slate-200/70 font-medium' : 'hover:bg-slate-200/40'
+              }`}
+            >
+              <span className="pl-[36px] text-center leading-tight">Areas We Handle</span>
+              <FaChevronDown size={14} className={`text-slate-500 transition-transform ${openDropdown === 'areas-mobile' ? 'rotate-180' : ''}`} />
+            </button>
+            {openDropdown === 'areas-mobile' && (
+              <div className="bg-slate-200/20 border-b border-slate-200/50 py-1 flex flex-col w-full max-h-[250px] overflow-y-auto">
+                {areasItems.map((item) => (
+                  <a key={item.href} href={item.href} className="block pl-16 pr-6 py-3 text-lg text-slate-700 hover:bg-slate-200/50 transition-colors">
+                    {item.label}
+                  </a>
+                ))}
+                <a href="/industries" className="block pl-16 pr-6 py-3 text-lg text-emerald-600 font-medium hover:bg-slate-200/50 transition-colors">
+                  View More →
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* 5. Pricing */}
+          <a
+            href="#pricing"
+            className="block text-slate-900 text-2xl font-normal py-5 px-8 pl-[68px] w-full text-left hover:bg-slate-200/40 transition-colors"
+          >
+            Pricing
+          </a>
+
+          {/* Horizontal Separation Rule Line */}
+          <div className="border-t border-slate-300/60 my-4 mx-6"></div>
+
+          {/* 6. Language Segment Label */}
+          <div className="w-full text-center">
+            <p className="text-slate-400 text-base font-normal tracking-wide pt-2">Language</p>
+            <MobileLangDropdown />
+          </div>
+
+          {/* 7. Sign In */}
+          <a
+            href="/login"
+            className="block text-slate-900 text-2xl font-normal py-5 px-8 text-center w-full hover:bg-slate-200/40 transition-colors mt-4"
+          >
+            Sign In
+          </a>
+
+          {/* 8. Get Started Mobile Section */}
+          <div className="flex flex-col w-full pb-8">
+            <button
+              onClick={() => toggleDropdown('get-started-mobile')}
+              className="flex items-center justify-center gap-2 text-slate-950 text-2xl font-medium py-4 px-8 w-full text-center hover:bg-slate-200/40 transition-colors"
+            >
+              <span>Get Started</span>
+              <FaChevronDown size={12} className={`text-slate-500 transition-transform ${openDropdown === 'get-started-mobile' ? 'rotate-180' : ''}`} />
+            </button>
+            {openDropdown === 'get-started-mobile' && (
+              <div className="bg-slate-200/20 py-1 flex flex-col w-full border-t border-slate-200/40">
+                {getStartedItems.map((item) => (
+                  <a key={item.href} href={item.href} className="block text-center py-2.5 text-base text-slate-700 hover:bg-slate-200/50 transition-colors">
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── AI AGENTS MEGA DROPDOWN (Desktop Only) ──────────────────────────── */}
       {openDropdown === 'ai-agents' && (
         <div
-          className="fixed left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-40 rounded-b-xl overflow-hidden shadow-2xl hidden lg:block"
+          className="fixed left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-30 rounded-b-xl overflow-hidden shadow-2xl hidden lg:block"
           style={{
             top: 'calc(3.5rem + 54px)',
             height: '480px',
@@ -422,7 +541,6 @@ const Navbar = () => {
             <FaTimes size={16} />
           </button>
           <div className="flex flex-row h-full">
-            {/* Sidebar */}
             <div className="w-64 shrink-0 flex flex-col py-4 border-r border-white/10 overflow-y-auto">
               <div className="px-5 py-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
                 DaitchPro AI Solutions
@@ -446,7 +564,6 @@ const Navbar = () => {
               </ul>
             </div>
 
-            {/* Content Panel */}
             <div className="flex-1 p-6 overflow-y-auto">
               <h3 className="text-white font-semibold text-lg mb-1">
                 {aiAgents[hoveredAgentIndex]?.name}
@@ -487,147 +604,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-
-      {/* ── MOBILE MENU (Right-Aligned Floating Dropdown) ──────────────────── */}
-      <div
-        className={`fixed  top-[130px] sm:top-[56px] right-[2.5%] w-[280px] bg-white border border-gray-100 rounded-xl shadow-xl z-50 lg:hidden transition-all duration-300 transform origin-top-right overflow-y-auto max-h-[calc(100vh-130px)] ${mobileMenuOpen ? 'scale-100 opacity-100 visible' : 'scale-95 opacity-0 invisible'
-          }`}
-      >
-        <div className="flex flex-col p-4 gap-1">
-
-          {/* AI Agents Mobile */}
-          <div className="flex flex-col">
-            <button
-              onClick={() => toggleDropdown('ai-agents-mobile')}
-              className="flex items-center justify-between text-gray-800 text-[15px] p-2 hover:bg-gray-50 rounded-lg cursor-pointer w-full text-left"
-            >
-              <div className="flex items-center gap-3">
-                <FaRobot className="text-emerald-600" size={18} />
-                AI Agents
-              </div>
-              <FaChevronDown size={10} className={`text-gray-500 transition-transform ${openDropdown === 'ai-agents-mobile' ? 'rotate-180' : ''}`} />
-            </button>
-            {openDropdown === 'ai-agents-mobile' && (
-              <div className="pl-9 mt-1 flex flex-col gap-1">
-                {aiAgents.map((agent) => (
-                  <a key={agent.name} href="#" className="block px-3 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
-                    {agent.name}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Solution Mobile */}
-          <div className="flex flex-col">
-            <button
-              onClick={() => toggleDropdown('solutions-mobile')}
-              className="flex items-center justify-between text-gray-800 text-[15px] p-2 hover:bg-gray-50 rounded-lg cursor-pointer w-full text-left"
-            >
-              <div className="flex items-center gap-3 pl-[28px]">
-                Solution
-              </div>
-              <FaChevronDown size={10} className={`text-gray-500 transition-transform ${openDropdown === 'solutions-mobile' ? 'rotate-180' : ''}`} />
-            </button>
-            {openDropdown === 'solutions-mobile' && (
-              <div className="pl-9 mt-1 flex flex-col gap-1">
-                {solutionsItems.map((item) => (
-                  <a key={item.href} href={item.href} className="block px-3 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Platform Mobile */}
-          <div className="flex flex-col">
-            <button
-              onClick={() => toggleDropdown('platform-mobile')}
-              className="flex items-center justify-between text-gray-800 text-[15px] p-2 hover:bg-gray-50 rounded-lg cursor-pointer w-full text-left"
-            >
-              <div className="flex items-center gap-3 pl-[28px]">
-                Platform
-              </div>
-              <FaChevronDown size={10} className={`text-gray-500 transition-transform ${openDropdown === 'platform-mobile' ? 'rotate-180' : ''}`} />
-            </button>
-            {openDropdown === 'platform-mobile' && (
-              <div className="pl-9 mt-1 flex flex-col gap-1">
-                {platformItems.map((item) => (
-                  <a key={item.href} href={item.href} className="block px-3 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Areas We Handle Mobile */}
-          <div className="flex flex-col">
-            <button
-              onClick={() => toggleDropdown('areas-mobile')}
-              className="flex items-center justify-between text-gray-800 text-[15px] p-2 hover:bg-gray-50 rounded-lg cursor-pointer w-full text-left"
-            >
-              <div className="flex items-center gap-3 pl-[28px]">
-                Areas We Handle
-              </div>
-              <FaChevronDown size={10} className={`text-gray-500 transition-transform ${openDropdown === 'areas-mobile' ? 'rotate-180' : ''}`} />
-            </button>
-            {openDropdown === 'areas-mobile' && (
-              <div className="pl-9 mt-1 flex flex-col gap-1">
-                {areasItems.map((item) => (
-                  <a key={item.href} href={item.href} className="block px-3 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
-                    {item.label}
-                  </a>
-                ))}
-                <a href="/industries" className="block px-3 py-2 text-sm text-emerald-600 font-medium hover:bg-emerald-50 rounded-lg transition-colors">
-                  View More →
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Pricing Mobile */}
-          <a href="#pricing" className="flex items-center text-gray-800 text-[15px] p-2 pl-[36px] hover:bg-gray-50 rounded-lg">
-            Pricing
-          </a>
-
-          {/* Divider line before Language/Auth */}
-          <div className="border-t border-gray-100 my-2 pt-2"></div>
-
-          {/* Language Switcher Mobile */}
-          <div className="px-2 mb-2">
-            <p className="text-[13px] text-gray-500 mb-1 ml-1">Language</p>
-            <MobileLangDropdown />
-          </div>
-
-          {/* Sign In */}
-          <a href="/login" className="flex items-center text-gray-800 text-[15px] p-2 pl-3 hover:bg-gray-50 rounded-lg mb-2">
-            Sign In
-          </a>
-
-          {/* Get Started Mobile */}
-          <div className="flex flex-col px-2 pb-2">
-            <button
-              onClick={() => toggleDropdown('get-started-mobile')}
-              className="flex items-center justify-between text-gray-800 text-[15px] p-2 hover:bg-gray-50 rounded-lg cursor-pointer w-full text-left"
-            >
-              <span>Get Started</span>
-              <FaChevronDown size={10} className={`text-gray-500 transition-transform ${openDropdown === 'get-started-mobile' ? 'rotate-180' : ''}`} />
-            </button>
-            {openDropdown === 'get-started-mobile' && (
-              <div className="mt-1 flex flex-col gap-1 pl-2 border-l-2 border-emerald-100 ml-2">
-                {getStartedItems.map((item) => (
-                  <a key={item.href} href={item.href} className="block px-3 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg transition-colors">
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-        </div>
-      </div>
     </>
   );
 };

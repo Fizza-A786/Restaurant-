@@ -2,6 +2,8 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+// Importing from src/assets/bg.png
+import bgBannerImage from '../../assets/bg.png'
 
 export default function WelcomeCTASection() {
   const ref = useRef(null)
@@ -16,15 +18,11 @@ export default function WelcomeCTASection() {
       className="w-full px-4 sm:px-6 lg:px-8 overflow-x-hidden"
     >
       <div className="max-w-[1320px] mx-auto">
-        {/* Banner container */}
-        <div className="relative w-full rounded-2xl sm:rounded-[32px] overflow-hidden">
-
-          {/* Background image */}
-          <img
-            src="/Gemini_Generated_Image_o8jubpo8jubpo8ju.png"
-            alt="Restaurant scene with staff"
-            className="w-full h-[180px] xs:h-[220px] sm:h-[300px] md:h-[380px] lg:h-[434px] object-cover object-center block"
-          />
+        {/* Banner container with fixed background string interpolation (.src) */}
+        <div 
+          className="relative w-full rounded-2xl sm:rounded-[32px] overflow-hidden bg-[#FAF8F5] bg-cover bg-center bg-no-repeat h-[180px] xs:h-[220px] sm:h-[300px] md:h-[380px] lg:h-[434px]"
+          style={{ backgroundImage: `url(${bgBannerImage.src})` }}
+        >
 
           {/* Dark overlay for readability on small screens */}
           <div className="absolute inset-0 bg-black/20 sm:bg-transparent" />
@@ -56,7 +54,7 @@ export default function WelcomeCTASection() {
                 >
                   Let AI Run Your Orders -
                 </h2>
-                <p
+                <div
                   className="text-black font-medium leading-tight m-0 flex items-center gap-2 flex-wrap justify-center"
                   style={{ fontSize: 'clamp(16px, 3.5vw, 24px)' }}
                 >
@@ -65,17 +63,18 @@ export default function WelcomeCTASection() {
                     Customers
                     {/* Green underline accent */}
                     <span
-                      className="absolute left-0 bottom-0 w-full"
+                      className="absolute left-0"
                       style={{
                         height: 'clamp(3px, 0.5vw, 5px)',
                         background: '#3C995B',
                         borderRadius: '2px',
                         bottom: '-3px',
+                        width: '100%',
                       }}
                       aria-hidden="true"
                     />
                   </span>
-                </p>
+                </div>
               </div>
 
               {/* Buttons */}
@@ -100,7 +99,7 @@ export default function WelcomeCTASection() {
                     minHeight: 'clamp(38px, 6vw, 52px)',
                   }}
                 >
-                  Start Free Trail
+                  Start Free Trial
                 </a>
 
                 {/* Secondary — Book a Demo */}
@@ -129,6 +128,6 @@ export default function WelcomeCTASection() {
           </div>
         </div>
       </div>
-    </motion.section>
+    </motion.section> 
   )
 }
