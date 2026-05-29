@@ -26,7 +26,6 @@ export default function VoiceAgentPanel({ isMobile }) {
           Voice Agent Panel
         </h3>
 
-        {/* Mic Icon */}
         <div className="flex justify-center mb-4">
           <div className="relative flex items-center justify-center">
             {/* Outer Glow */}
