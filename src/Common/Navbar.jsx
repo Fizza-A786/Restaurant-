@@ -82,6 +82,74 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
   );
 };
 
+// Move these helper components outside of the Navbar render to avoid recreating
+// components during render which resets their state on every render.
+const SimpleDropdown = ({ items, viewMoreHref }) => (
+  <div className="absolute top-full left-0 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 max-h-[70vh] overflow-y-auto">
+    {items.map((item) => (
+      <a
+        key={item.href}
+        href={item.href}
+        className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+      >
+        {item.label}
+      </a>
+    ))}
+    {viewMoreHref && (
+      <a
+        href={viewMoreHref}
+        className="block px-4 py-2 text-sm text-emerald-600 font-semibold border-t border-gray-100 mt-1 pt-3 hover:bg-emerald-50 transition-colors"
+      >
+        View More →
+      </a>
+    )}
+  </div>
+);
+
+const MobileLangDropdown = ({ toggleDropdown, selectedLang, setSelectedLang, openDropdown, setMobileMenuOpen }) => (
+  <div className="flex flex-col w-full">
+    <button
+      onClick={() => toggleDropdown('lang-mobile')}
+      className="flex items-center justify-center gap-3 text-slate-800 text-2xl font-normal py-4 px-6 w-full text-center hover:bg-slate-200/50 transition-colors"
+    >
+      <img className='h-[18px] w-[26px] object-cover' src={selectedLang.flag} alt={selectedLang.label} />
+      <span>{selectedLang.label}</span>
+    </button>
+    {openDropdown === 'lang-mobile' && (
+      <div className="bg-slate-200/30 flex flex-col w-full border-t border-b border-slate-200/60">
+        {LANGUAGES.map((lang) => {
+          if (lang.code === 'ar') {
+            return (
+              <Link
+                key={lang.code}
+                to={lang.link}
+                onClick={() => { setMobileMenuOpen(false); toggleDropdown(null); }}
+                className="block text-center py-3 text-lg text-emerald-600 font-medium hover:bg-slate-200 transition-colors"
+              >
+                {lang.label}
+              </Link>
+            );
+          }
+          return (
+            <button
+              key={lang.code}
+              onClick={() => { setSelectedLang(lang); toggleDropdown('lang-mobile'); }}
+              className={`flex items-center justify-center gap-3 py-3 text-base transition-colors ${
+                selectedLang.code === lang.code
+                  ? 'text-emerald-600 bg-emerald-50/50 font-medium'
+                  : 'text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              <img className='h-[14px] w-[20px] object-cover' src={lang.flag} alt={lang.label} />
+              <span>{lang.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    )}
+  </div>
+);
+
 // ── Main Navbar ──────────────────────────────────────────────────────────────
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -190,71 +258,7 @@ const Navbar = () => {
     },
   ];
 
-  const SimpleDropdown = ({ items, viewMoreHref }) => (
-    <div className="absolute top-full left-0 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 max-h-[70vh] overflow-y-auto">
-      {items.map((item) => (
-        <a
-          key={item.href}
-          href={item.href}
-          className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
-        >
-          {item.label}
-        </a>
-      ))}
-      {viewMoreHref && (
-        <a
-          href={viewMoreHref}
-          className="block px-4 py-2 text-sm text-emerald-600 font-semibold border-t border-gray-100 mt-1 pt-3 hover:bg-emerald-50 transition-colors"
-        >
-          View More →
-        </a>
-      )}
-    </div>
-  );
-
-  const MobileLangDropdown = () => (
-    <div className="flex flex-col w-full">
-      <button
-        onClick={() => toggleDropdown('lang-mobile')}
-        className="flex items-center justify-center gap-3 text-slate-800 text-2xl font-normal py-4 px-6 w-full text-center hover:bg-slate-200/50 transition-colors"
-      >
-        <img className='h-[18px] w-[26px] object-cover' src={selectedLang.flag} alt={selectedLang.label} />
-        <span>{selectedLang.label}</span>
-      </button>
-      {openDropdown === 'lang-mobile' && (
-        <div className="bg-slate-200/30 flex flex-col w-full border-t border-b border-slate-200/60">
-          {LANGUAGES.map((lang) => {
-            if (lang.code === 'ar') {
-              return (
-                <Link
-                  key={lang.code}
-                  to={lang.link}
-                  onClick={() => { setMobileMenuOpen(false); toggleDropdown(null); }}
-                  className="block text-center py-3 text-lg text-emerald-600 font-medium hover:bg-slate-200 transition-colors"
-                >
-                  {lang.label}
-                </Link>
-              );
-            }
-            return (
-              <button
-                key={lang.code}
-                onClick={() => { setSelectedLang(lang); toggleDropdown('lang-mobile'); }}
-                className={`flex items-center justify-center gap-3 py-3 text-base transition-colors ${
-                  selectedLang.code === lang.code
-                    ? 'text-emerald-600 bg-emerald-50/50 font-medium'
-                    : 'text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                <img className='h-[14px] w-[20px] object-cover' src={lang.flag} alt={lang.label} />
-                <span>{lang.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
+  
 
   return (
     <>
@@ -489,7 +493,13 @@ const Navbar = () => {
           {/* 6. Language Segment Label */}
           <div className="w-full text-center">
             <p className="text-slate-400 text-base font-normal tracking-wide pt-2">Language</p>
-            <MobileLangDropdown />
+            <MobileLangDropdown
+              toggleDropdown={toggleDropdown}
+              selectedLang={selectedLang}
+              setSelectedLang={setSelectedLang}
+              openDropdown={openDropdown}
+              setMobileMenuOpen={setMobileMenuOpen}
+            />
           </div>
 
           {/* 7. Sign In */}

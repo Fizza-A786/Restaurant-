@@ -8,6 +8,8 @@ import WaveformDemoSection from '../components/Home/WaveformDemoSection';
 import RevenueLeakageSection from '../components/Home/RevenueLeakageSection';
 import WelcomeCTASection from '../components/Home/Welcomectasection ';
 import RestaurantRevenueCalculator from '../components/Home/RestaurantRevenueCalculator';
+import RestaurantComparisonSection from '../components/Home/RestaurantComparisonSection';
+import RestaurantAiWorkforce from '../components/Home/RestaurantAiWorkforce';
 
 export default function Hero() {
   return (
@@ -46,6 +48,8 @@ export default function Hero() {
       <WaveformDemoSection />
       <RevenueLeakageSection />
       <RestaurantRevenueCalculator/>
+      <RestaurantComparisonSection/>
+      <RestaurantAiWorkforce/>
       
       <WelcomeCTASection/>
 
