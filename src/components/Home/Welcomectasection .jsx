@@ -20,7 +20,7 @@ export default function WelcomeCTASection() {
       <div className="max-w-[1320px] mx-auto">
         {/* Banner container with fixed background string interpolation (.src) */}
         <div 
-          className="relative w-full rounded-2xl sm:rounded-[32px] overflow-hidden bg-[#FAF8F5] bg-cover bg-center bg-no-repeat h-[180px] xs:h-[220px] sm:h-[300px] md:h-[380px] lg:h-[434px]"
+          className="relative w-full rounded-2xl sm:rounded-[32px] overflow-hidden bg-[#FAF8F5] bg-cover bg-center bg-no-repeat h-[200px] xs:h-[220px] sm:h-[300px] md:h-[380px] lg:h-[434px]"
           style={{ backgroundImage: `url(${bgBannerImage.src})` }}
         >
 
@@ -78,7 +78,7 @@ export default function WelcomeCTASection() {
               </div>
 
               {/* Buttons */}
-              <div className="flex flex-row flex-wrap justify-center gap-3 sm:gap-4 w-full">
+              <div className="flex flex-row  mt-3 justify-center gap-3 sm:gap-4 w-full">
                 {/* Primary — Start Free Trial */}
                 <a
                   href="/signup"

@@ -8,10 +8,10 @@ export default function RestaurantComparisonSection() {
         
         {/* Header Section */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black tracking-tight mb-4">
+          <h2 className="ttext-[26px] sm:text-[32px] md:text-[40px] lg:text-[42px]  text-black tracking-tight font-bold leading-[1.1] md:leading-tight mb-4">
             Why Traditional Restaurant Communication Is Broken
           </h2>
-          <p className="text-base sm:text-lg text-gray-500 font-normal">
+          <p className="text-[13px] sm:text-lg text-gray-500 font-normal">
             Operational inefficiencies vs intelligent automation
           </p>
         </div>
@@ -21,7 +21,7 @@ export default function RestaurantComparisonSection() {
           
           {/* LEFT PANEL: Human-Only Model */}
           <div 
-            className="relative bg-cover bg-center p-6 sm:p-10 lg:p-12 flex flex-col justify-between min-h-[500px] lg:min-h-auto"
+            className="relative bg-cover bg-center p-6 sm:p-10 lg:p-12 flex flex-col justify-between min-h-[400px] md:min-h-[500px] lg:min-h-auto"
             style={{ 
               backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1000')` 
               /* Replace with your local path: '../../assets/human-model.jpg' */
@@ -36,10 +36,10 @@ export default function RestaurantComparisonSection() {
               style={{ background: 'rgba(255, 255, 255, 0.45)' }}
             >
               <h3 className="text-[#8B3A1E] font-bold text-xl sm:text-2xl tracking-wide uppercase mb-6 leading-tight">
-                HUMAN-ONLY<br />MODEL
+                HUMAN-ONLY<br className='hidden md:block'/>{''} MODEL
               </h3>
               
-              <ul className="space-y-3.5 text-gray-900 font-medium text-[15px] sm:text-base">
+              <ul className="space-y-2 md:space-y-3.5 text-gray-900 md:font-medium text-[15px] sm:text-base">
                 <li className="flex items-center gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-gray-900 flex-shrink-0" />
                   Limited working hours only

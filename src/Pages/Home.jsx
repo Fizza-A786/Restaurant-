@@ -31,7 +31,7 @@ export default function Hero() {
             transition={{ duration: 1, ease: "easeOut" }}
             src={sectionImg} 
             alt="Restaurant environment" 
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover "
           />
 
           {/* Glass Panels Overlay Container */}

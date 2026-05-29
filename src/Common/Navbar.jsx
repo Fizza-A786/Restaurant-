@@ -34,7 +34,7 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
     <div className="relative" ref={ref}>
       <button
         onClick={() => toggleDropdown(dropdownId)}
-        className="flex items-center gap-1.5 text-gray-700 hover:text-emerald-600 transition-colors text-lg bg-transparent border-none cursor-pointer"
+        className="flex items-center gap-1.5 text-gray-700 hover:text-emerald-600 transition-colors text-[14px] xl:text-[15px] bg-transparent border-none cursor-pointer whitespace-nowrap"
       >
         <img className="h-[12px] w-[18px]" src={LANGUAGES[0].flag} alt={LANGUAGES[0].label} />
         <span>{LANGUAGES[0].label}</span>
@@ -59,7 +59,7 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
                 <Link
                   to={lang.link}
                   onClick={() => toggleDropdown(dropdownId)}
-                  className="block px-4 py-2 text-sm text-emerald-600 font-medium hover:bg-emerald-50 transition-colors"
+                  className="block px-4 py-2 text-sm text-emerald-600 font-medium hover:bg-emerald-50 transition-colors whitespace-nowrap"
                 >
                   {lang.label}
                 </Link>
@@ -68,7 +68,7 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
                   onClick={() => {
                     toggleDropdown(dropdownId);
                   }}
-                  className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                  className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors whitespace-nowrap"
                 >
                   <img className="h-[12px] w-[18px]" src={lang.flag} alt={lang.label} />
                   <span>{lang.label}</span>
@@ -83,7 +83,6 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
 };
 
 // Move these helper components outside of the Navbar render to avoid recreating
-// components during render which resets their state on every render.
 const SimpleDropdown = ({ items, viewMoreHref }) => (
   <div className="absolute top-full left-0 mt-3 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 max-h-[70vh] overflow-y-auto">
     {items.map((item) => (
@@ -107,16 +106,17 @@ const SimpleDropdown = ({ items, viewMoreHref }) => (
 );
 
 const MobileLangDropdown = ({ toggleDropdown, selectedLang, setSelectedLang, openDropdown, setMobileMenuOpen }) => (
-  <div className="flex flex-col w-full">
+  <div className="flex flex-col w-full px-6">
     <button
       onClick={() => toggleDropdown('lang-mobile')}
-      className="flex items-center justify-center gap-3 text-slate-800 text-2xl font-normal py-4 px-6 w-full text-center hover:bg-slate-200/50 transition-colors"
+      className="flex items-center justify-center gap-3 text-slate-800 text-[16px] font-medium py-3 px-4 w-full text-center hover:bg-slate-200/50 rounded-lg transition-colors"
     >
-      <img className='h-[18px] w-[26px] object-cover' src={selectedLang.flag} alt={selectedLang.label} />
+      <img className='h-[16px] w-[24px] object-cover rounded-sm' src={selectedLang.flag} alt={selectedLang.label} />
       <span>{selectedLang.label}</span>
+      <FaChevronDown size={10} className={`text-slate-400 transition-transform ${openDropdown === 'lang-mobile' ? 'rotate-180' : ''}`} />
     </button>
     {openDropdown === 'lang-mobile' && (
-      <div className="bg-slate-200/30 flex flex-col w-full border-t border-b border-slate-200/60">
+      <div className="bg-white/80 rounded-lg shadow-inner mt-2 py-2 flex flex-col w-full border border-slate-200/60 max-h-[200px] overflow-y-auto">
         {LANGUAGES.map((lang) => {
           if (lang.code === 'ar') {
             return (
@@ -124,7 +124,7 @@ const MobileLangDropdown = ({ toggleDropdown, selectedLang, setSelectedLang, ope
                 key={lang.code}
                 to={lang.link}
                 onClick={() => { setMobileMenuOpen(false); toggleDropdown(null); }}
-                className="block text-center py-3 text-lg text-emerald-600 font-medium hover:bg-slate-200 transition-colors"
+                className="block text-center py-2.5 text-[15px] text-emerald-600 font-medium hover:bg-slate-100 transition-colors"
               >
                 {lang.label}
               </Link>
@@ -134,13 +134,13 @@ const MobileLangDropdown = ({ toggleDropdown, selectedLang, setSelectedLang, ope
             <button
               key={lang.code}
               onClick={() => { setSelectedLang(lang); toggleDropdown('lang-mobile'); }}
-              className={`flex items-center justify-center gap-3 py-3 text-base transition-colors ${
+              className={`flex items-center justify-center gap-3 py-2.5 text-[15px] transition-colors ${
                 selectedLang.code === lang.code
-                  ? 'text-emerald-600 bg-emerald-50/50 font-medium'
-                  : 'text-slate-600 hover:bg-slate-200'
+                  ? 'text-emerald-600 bg-emerald-50/50 font-semibold'
+                  : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
-              <img className='h-[14px] w-[20px] object-cover' src={lang.flag} alt={lang.label} />
+              <img className='h-[14px] w-[20px] object-cover rounded-sm' src={lang.flag} alt={lang.label} />
               <span>{lang.label}</span>
             </button>
           );
@@ -156,6 +156,33 @@ const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [hoveredAgentIndex, setHoveredAgentIndex] = useState(0);
   const [selectedLang, setSelectedLang] = useState(LANGUAGES[0]);
+  
+  // States for scroll hide/show
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Handle auto-hide on scroll
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (typeof window !== 'undefined') {
+        const currentScrollY = window.scrollY;
+        
+        // Don't hide if the mobile menu or a dropdown is currently open
+        if (mobileMenuOpen) return;
+
+        // Hide if scrolling down past 80px, show if scrolling up
+        if (currentScrollY > lastScrollY && currentScrollY > 80) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+        setLastScrollY(currentScrollY);
+      }
+    };
+
+    window.addEventListener('scroll', controlNavbar);
+    return () => window.removeEventListener('scroll', controlNavbar);
+  }, [lastScrollY, mobileMenuOpen]);
 
   // Handle clicking outside mobile sidebar menu to auto-close it
   useEffect(() => {
@@ -258,15 +285,15 @@ const Navbar = () => {
     },
   ];
 
-  
-
   return (
     <>
       {/* ── DESKTOP/MOBILE HEADER BAR ───────────────────────────────────────── */}
       <nav
-        className="absolute left-1/2 -translate-x-1/2 w-[92%] sm:w-[95%] z-40 rounded-2xl px-6 py-4 transition-all duration-300"
+        className={`fixed left-1/2 -translate-x-1/2 w-[92%] sm:w-[95%] z-40 rounded-2xl px-4 xl:px-6 py-4 transition-all duration-500 ease-in-out ${
+          isVisible ? 'translate-y-0 opacity-100' : '-translate-y-[200%] opacity-0'
+        }`}
         style={{
-          top: '54px',
+          top: '54px', /* Adjusted top margin for a fixed nav */
           background: 'rgba(255,255,255,0.55)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
@@ -276,7 +303,7 @@ const Navbar = () => {
       >
         <div className="flex items-center justify-between">
           {/* LEFT: Logo */}
-          <div className="flex items-center h-[30px] gap-2 cursor-pointer">
+          <div className="flex items-center h-[24px] xl:h-[30px] gap-2 cursor-pointer shrink-0">
             <img
               src="src/assets/logo.png"
               className="h-full w-auto object-contain brightness-0"
@@ -285,11 +312,11 @@ const Navbar = () => {
           </div>
 
           {/* CENTER: Desktop Links */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-4 xl:gap-8 justify-center flex-1 mx-4">
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('ai-agents')}
-                className="flex font-medium text-[15px] items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none"
+                className="flex font-medium text-[14px] xl:text-[15px] items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap"
               >
                 <FaRobot className="text-emerald-500" />
                 <span>AI Agents</span>
@@ -300,7 +327,7 @@ const Navbar = () => {
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('solutions')}
-                className="flex text-[15px] font-medium items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none"
+                className="flex font-medium text-[14px] xl:text-[15px] items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap"
               >
                 <span>Solution</span>
                 <FaChevronDown size={10} className={`mt-0.5 text-gray-500 transition-transform ${openDropdown === 'solutions' ? 'rotate-180' : ''}`} />
@@ -311,7 +338,7 @@ const Navbar = () => {
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('platform')}
-                className="flex text-[15px] font-medium items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none"
+                className="flex font-medium text-[14px] xl:text-[15px] items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap"
               >
                 <span>Platform</span>
                 <FaChevronDown size={10} className={`mt-0.5 text-gray-500 transition-transform ${openDropdown === 'platform' ? 'rotate-180' : ''}`} />
@@ -322,7 +349,7 @@ const Navbar = () => {
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('areas')}
-                className="flex text-[15px] font-medium items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none"
+                className="flex font-medium text-[14px] xl:text-[15px] items-center gap-1 text-gray-700 hover:text-emerald-600 transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap"
               >
                 <span>Areas We Handle</span>
                 <FaChevronDown size={10} className={`mt-0.5 text-gray-500 transition-transform ${openDropdown === 'areas' ? 'rotate-180' : ''}`} />
@@ -330,25 +357,25 @@ const Navbar = () => {
               {openDropdown === 'areas' && <SimpleDropdown items={areasItems} viewMoreHref="/industries" />}
             </div>
 
-            <a href="#pricing" className="text-[15px] font-medium text-gray-700 hover:text-emerald-600 transition-colors">
+            <a href="#pricing" className="text-[14px] xl:text-[15px] font-medium text-gray-700 hover:text-emerald-600 transition-colors whitespace-nowrap">
               Pricing
             </a>
           </div>
 
           {/* RIGHT: Desktop Auth Actions */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-4 shrink-0">
             <div className="navbar-dropdown-wrapper">
               <LanguageSwitcher openDropdown={openDropdown} toggleDropdown={toggleDropdown} dropdownId="language" />
             </div>
 
-            <a href="/login" className="text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors">
+            <a href="/login" className="text-gray-700 font-medium text-[14px] xl:text-[15px] hover:text-gray-900 transition-colors whitespace-nowrap">
               Sign In
             </a>
 
             <div className="relative navbar-dropdown-wrapper">
               <button
                 onClick={() => toggleDropdown('get-started')}
-                className="inline-flex font-medium items-center justify-center gap-2 h-10 px-6 rounded-xl text-black border border-white opacity-90 bg-[radial-gradient(59.41%_515.38%_at_40.59%_15.83%,rgba(175,217,177,0.89)_0%,rgba(60,153,91,0.89)_100%)] shadow-[0px_0px_30px_rgba(0,0,0,0.15)] backdrop-blur-[39.45px] transition-all"
+                className="inline-flex font-medium items-center justify-center gap-2 h-9 xl:h-10 px-4 xl:px-6 rounded-xl text-black border border-white opacity-90 bg-[radial-gradient(59.41%_515.38%_at_40.59%_15.83%,rgba(175,217,177,0.89)_0%,rgba(60,153,91,0.89)_100%)] shadow-[0px_0px_30px_rgba(0,0,0,0.15)] backdrop-blur-[39.45px] transition-all hover:scale-105 whitespace-nowrap text-[14px] xl:text-[15px]"
               >
                 Get Started
                 <FaChevronDown size={10} className={`transition-transform ${openDropdown === 'get-started' ? 'rotate-180' : ''}`} />
@@ -356,7 +383,7 @@ const Navbar = () => {
               {openDropdown === 'get-started' && (
                 <div className="absolute top-full right-0 mt-3 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2">
                   {getStartedItems.map((item) => (
-                    <a key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">
+                    <a key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors whitespace-nowrap">
                       {item.label}
                     </a>
                   ))}
@@ -366,7 +393,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Icon Selector Trigger */}
-          <div className="lg:hidden flex items-center">
+          <div className="lg:hidden flex items-center shrink-0">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="mobile-toggle-btn text-gray-800 hover:text-emerald-600 focus:outline-none p-2 relative z-50"
@@ -377,32 +404,32 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* ── MOBILE FULL SIDEBAR MENU (Matches Image Design Exactly) ─────────── */}
+      {/* ── MOBILE FULL SIDEBAR MENU ────────────────────────────────────────── */}
       <div
-        className={`mobile-sidebar-container fixed top-0 right-0 h-full w-[280px] sm:w-[320px] bg-[#eef3f7] border-l border-slate-200/80 shadow-2xl z-50 lg:hidden transition-transform duration-300 ease-out flex flex-col justify-start pt-24 overflow-y-auto ${
+        className={`mobile-sidebar-container fixed top-0 right-0 h-full w-[300px] bg-[#f8fafc] border-l border-slate-200 shadow-2xl z-[60] lg:hidden transition-transform duration-300 ease-in-out flex flex-col justify-start pt-4 overflow-y-auto ${
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full px-2">
           
           {/* 1. AI Agents */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full mb-1">
             <button
               onClick={() => toggleDropdown('ai-agents-mobile')}
-              className={`flex items-center justify-between text-slate-900 text-2xl font-normal py-5 px-8 w-full text-left transition-colors ${
-                openDropdown === 'ai-agents-mobile' ? 'bg-slate-200/70 font-medium' : 'hover:bg-slate-200/40'
+              className={`flex items-center justify-between text-slate-800 text-[16px] font-semibold py-3.5 px-6 rounded-xl w-full text-left transition-colors ${
+                openDropdown === 'ai-agents-mobile' ? 'bg-slate-200/60 text-emerald-700' : 'hover:bg-slate-200/40'
               }`}
             >
-              <div className="flex items-center gap-3.5">
-                <FaRobot className="text-slate-700" size={22} />
+              <div className="flex items-center gap-3">
+                <FaRobot className="text-[18px] text-emerald-500" />
                 <span>AI Agents</span>
               </div>
-              <FaChevronDown size={14} className={`text-slate-500 transition-transform ${openDropdown === 'ai-agents-mobile' ? 'rotate-180' : ''}`} />
+              <FaChevronDown size={12} className={`text-slate-400 transition-transform ${openDropdown === 'ai-agents-mobile' ? 'rotate-180' : ''}`} />
             </button>
             {openDropdown === 'ai-agents-mobile' && (
-              <div className="bg-slate-200/20 border-b border-slate-200/50 py-1 flex flex-col w-full">
+              <div className="flex flex-col w-full py-2 pl-4 pr-2">
                 {aiAgents.map((agent) => (
-                  <a key={agent.name} href="#" className="block pl-16 pr-6 py-3 text-lg text-slate-700 hover:bg-slate-200/50 transition-colors">
+                  <a key={agent.name} href="#" className="block text-[15px] pl-8 pr-4 py-2.5 text-slate-600 rounded-lg hover:text-emerald-600 hover:bg-slate-100 transition-colors">
                     {agent.name}
                   </a>
                 ))}
@@ -411,20 +438,20 @@ const Navbar = () => {
           </div>
 
           {/* 2. Solution */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full mb-1">
             <button
               onClick={() => toggleDropdown('solutions-mobile')}
-              className={`flex items-center justify-between text-slate-900 text-2xl font-normal py-5 px-8 w-full text-left transition-colors ${
-                openDropdown === 'solutions-mobile' ? 'bg-slate-200/70 font-medium' : 'hover:bg-slate-200/40'
+              className={`flex items-center justify-between text-slate-800 text-[16px] font-semibold py-3.5 px-6 rounded-xl w-full text-left transition-colors ${
+                openDropdown === 'solutions-mobile' ? 'bg-slate-200/60 text-emerald-700' : 'hover:bg-slate-200/40'
               }`}
             >
-              <span className="pl-[36px]">Solution</span>
-              <FaChevronDown size={14} className={`text-slate-500 transition-transform ${openDropdown === 'solutions-mobile' ? 'rotate-180' : ''}`} />
+              <span className="pl-[26px]">Solution</span>
+              <FaChevronDown size={12} className={`text-slate-400 transition-transform ${openDropdown === 'solutions-mobile' ? 'rotate-180' : ''}`} />
             </button>
             {openDropdown === 'solutions-mobile' && (
-              <div className="bg-slate-200/20 border-b border-slate-200/50 py-1 flex flex-col w-full max-h-[250px] overflow-y-auto">
+              <div className="flex flex-col w-full py-2 pl-4 pr-2 max-h-[300px] overflow-y-auto">
                 {solutionsItems.map((item) => (
-                  <a key={item.href} href={item.href} className="block pl-16 pr-6 py-3 text-lg text-slate-700 hover:bg-slate-200/50 transition-colors">
+                  <a key={item.href} href={item.href} className="block pl-8 pr-4 py-2.5 text-[15px] text-slate-600 rounded-lg hover:text-emerald-600 hover:bg-slate-100 transition-colors">
                     {item.label}
                   </a>
                 ))}
@@ -433,20 +460,20 @@ const Navbar = () => {
           </div>
 
           {/* 3. Platform */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full mb-1">
             <button
               onClick={() => toggleDropdown('platform-mobile')}
-              className={`flex items-center justify-between text-slate-900 text-2xl font-normal py-5 px-8 w-full text-left transition-colors ${
-                openDropdown === 'platform-mobile' ? 'bg-slate-200/70 font-medium' : 'hover:bg-slate-200/40'
+              className={`flex items-center justify-between text-slate-800 text-[16px] font-semibold py-3.5 px-6 rounded-xl w-full text-left transition-colors ${
+                openDropdown === 'platform-mobile' ? 'bg-slate-200/60 text-emerald-700' : 'hover:bg-slate-200/40'
               }`}
             >
-              <span className="pl-[36px]">Platform</span>
-              <FaChevronDown size={14} className={`text-slate-500 transition-transform ${openDropdown === 'platform-mobile' ? 'rotate-180' : ''}`} />
+              <span className="pl-[26px]">Platform</span>
+              <FaChevronDown size={12} className={`text-slate-400 transition-transform ${openDropdown === 'platform-mobile' ? 'rotate-180' : ''}`} />
             </button>
             {openDropdown === 'platform-mobile' && (
-              <div className="bg-slate-200/20 border-b border-slate-200/50 py-1 flex flex-col w-full">
+              <div className="flex flex-col w-full py-2 pl-4 pr-2">
                 {platformItems.map((item) => (
-                  <a key={item.href} href={item.href} className="block pl-16 pr-6 py-3 text-lg text-slate-700 hover:bg-slate-200/50 transition-colors">
+                  <a key={item.href} href={item.href} className="block pl-8 pr-4 py-2.5 text-[15px] text-slate-600 rounded-lg hover:text-emerald-600 hover:bg-slate-100 transition-colors">
                     {item.label}
                   </a>
                 ))}
@@ -455,24 +482,24 @@ const Navbar = () => {
           </div>
 
           {/* 4. Areas We Handle */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full mb-1">
             <button
               onClick={() => toggleDropdown('areas-mobile')}
-              className={`flex items-center justify-between text-slate-900 text-2xl font-normal py-5 px-8 w-full text-left transition-colors ${
-                openDropdown === 'areas-mobile' ? 'bg-slate-200/70 font-medium' : 'hover:bg-slate-200/40'
+              className={`flex items-center justify-between text-slate-800 text-[16px] font-semibold py-3.5 px-6 rounded-xl w-full text-left transition-colors ${
+                openDropdown === 'areas-mobile' ? 'bg-slate-200/60 text-emerald-700' : 'hover:bg-slate-200/40'
               }`}
             >
-              <span className="pl-[36px] text-center leading-tight">Areas We Handle</span>
-              <FaChevronDown size={14} className={`text-slate-500 transition-transform ${openDropdown === 'areas-mobile' ? 'rotate-180' : ''}`} />
+              <span className="pl-[26px]">Areas We Handle</span>
+              <FaChevronDown size={12} className={`text-slate-400 transition-transform ${openDropdown === 'areas-mobile' ? 'rotate-180' : ''}`} />
             </button>
             {openDropdown === 'areas-mobile' && (
-              <div className="bg-slate-200/20 border-b border-slate-200/50 py-1 flex flex-col w-full max-h-[250px] overflow-y-auto">
+              <div className="flex flex-col w-full py-2 pl-4 pr-2 max-h-[300px] overflow-y-auto">
                 {areasItems.map((item) => (
-                  <a key={item.href} href={item.href} className="block pl-16 pr-6 py-3 text-lg text-slate-700 hover:bg-slate-200/50 transition-colors">
+                  <a key={item.href} href={item.href} className="block pl-8 pr-4 py-2.5 text-[15px] text-slate-600 rounded-lg hover:text-emerald-600 hover:bg-slate-100 transition-colors">
                     {item.label}
                   </a>
                 ))}
-                <a href="/industries" className="block pl-16 pr-6 py-3 text-lg text-emerald-600 font-medium hover:bg-slate-200/50 transition-colors">
+                <a href="/industries" className="block pl-8 pr-4 py-2.5 text-[15px] text-emerald-600 font-semibold rounded-lg hover:bg-emerald-50 transition-colors mt-1">
                   View More →
                 </a>
               </div>
@@ -482,17 +509,17 @@ const Navbar = () => {
           {/* 5. Pricing */}
           <a
             href="#pricing"
-            className="block text-slate-900 text-2xl font-normal py-5 px-8 pl-[68px] w-full text-left hover:bg-slate-200/40 transition-colors"
+            className="block text-slate-800 text-[16px] font-semibold py-3.5 px-6 pl-[50px] w-full text-left rounded-xl hover:bg-slate-200/40 transition-colors"
           >
             Pricing
           </a>
 
           {/* Horizontal Separation Rule Line */}
-          <div className="border-t border-slate-300/60 my-4 mx-6"></div>
+          <div className="border-t border-slate-200 my-4 mx-4"></div>
 
           {/* 6. Language Segment Label */}
-          <div className="w-full text-center">
-            <p className="text-slate-400 text-base font-normal tracking-wide pt-2">Language</p>
+          <div className="w-full mb-4">
+            <p className="text-slate-400 text-[13px] font-semibold uppercase tracking-wider pl-6 mb-2">Region & Language</p>
             <MobileLangDropdown
               toggleDropdown={toggleDropdown}
               selectedLang={selectedLang}
@@ -503,33 +530,34 @@ const Navbar = () => {
           </div>
 
           {/* 7. Sign In */}
-          <a
-            href="/login"
-            className="block text-slate-900 text-2xl font-normal py-5 px-8 text-center w-full hover:bg-slate-200/40 transition-colors mt-4"
-          >
-            Sign In
-          </a>
+          <div className="px-4 mt-2">
+            <a
+              href="/login"
+              className="block text-slate-700 text-[16px] font-semibold py-3 px-6 text-center w-full rounded-xl border border-slate-200 hover:bg-slate-100 transition-colors"
+            >
+              Sign In
+            </a>
+          </div>
 
           {/* 8. Get Started Mobile Section */}
-          <div className="flex flex-col w-full pb-8">
+          <div className="flex flex-col w-full px-4 mt-3 pb-8">
             <button
               onClick={() => toggleDropdown('get-started-mobile')}
-              className="flex items-center justify-center gap-2 text-slate-950 text-2xl font-medium py-4 px-8 w-full text-center hover:bg-slate-200/40 transition-colors"
+              className="flex items-center justify-center gap-2 text-white bg-emerald-600 text-[16px] font-semibold py-3 px-6 w-full rounded-xl text-center shadow-md hover:bg-emerald-700 transition-colors"
             >
               <span>Get Started</span>
-              <FaChevronDown size={12} className={`text-slate-500 transition-transform ${openDropdown === 'get-started-mobile' ? 'rotate-180' : ''}`} />
+              <FaChevronDown size={12} className={`text-emerald-200 transition-transform ${openDropdown === 'get-started-mobile' ? 'rotate-180' : ''}`} />
             </button>
             {openDropdown === 'get-started-mobile' && (
-              <div className="bg-slate-200/20 py-1 flex flex-col w-full border-t border-slate-200/40">
+              <div className="bg-white rounded-xl shadow-md border border-slate-100 py-2 flex flex-col w-full mt-2">
                 {getStartedItems.map((item) => (
-                  <a key={item.href} href={item.href} className="block text-center py-2.5 text-base text-slate-700 hover:bg-slate-200/50 transition-colors">
+                  <a key={item.href} href={item.href} className="block text-center py-2.5 text-[15px] text-slate-700 font-medium hover:text-emerald-600 hover:bg-slate-50 transition-colors">
                     {item.label}
                   </a>
                 ))}
               </div>
             )}
           </div>
-
         </div>
       </div>
 
@@ -538,7 +566,7 @@ const Navbar = () => {
         <div
           className="fixed left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-30 rounded-b-xl overflow-hidden shadow-2xl hidden lg:block"
           style={{
-            top: 'calc(3.5rem + 54px)',
+            top: 'calc(4.5rem + 30px)',
             height: '480px',
             background: 'linear-gradient(180deg, #063A2F 0%, #052d24 100%)',
             border: '1px solid rgba(255,255,255,0.12)',

@@ -14,7 +14,7 @@ export default function HeroContent() {
         lg:bg-white/35
       ">
         {/* Left aligned text on all screens according to the image */}
-        <h1 className="text-[34px] sm:text-5xl lg:text-[47px] mt-2 lg:mt-14 font-bold text-[#1A202C] leading-[1.15] mb-6 tracking-tight font-sans text-left">
+        <h1 className="text-[34px] sm:text-5xl lg:text-[47px] mt-2 lg:mt-14 font-bold md:text-[#1A202C] text-white text-center leading-[1.15] mb-6 tracking-tight font-sans md:text-left">
           DaitchPro – AI Restaurant Revenue Intelligence Agent
         </h1>
 
