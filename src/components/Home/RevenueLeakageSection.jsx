@@ -87,12 +87,12 @@ function StatCard({ value, label }) {
 
 function SubCardRow({ icon: Icon, title, desc }) {
   return (
-    <div className="flex items-center gap-2.5 sm:gap-3 w-full text-left">
+    <div className="flex sm:flex-row flex-col justify-center sm:justify-normal items-center gap-2.5 sm:gap-3 w-full text-left">
       <div className="flex h-[36px] w-[36px] sm:h-[42px] sm:w-[42px] shrink-0 items-center justify-center rounded-xl bg-[#F5E6E1]">
         <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-[#C25E42]" />
       </div>
-      <div className="flex flex-col">
-        <h4 className="text-[14px] sm:text-[15px] lg:text-[16px] font-bold leading-tight text-black">
+      <div className="flex flex-col sm:justify-items-normal  items-center">
+        <h4 className="text-[12px] sm:text-[15px] lg:text-[16px] font-bold leading-tight text-black">
           {title}
         </h4>
         <p className="text-[11px] sm:text-[12px] lg:text-[13px] leading-tight text-[#444444] font-medium mt-0.5">
@@ -121,7 +121,8 @@ export default function RevenueLeakageSection() {
         <div
           className="relative w-full rounded-[24px] sm:rounded-[32px] md:rounded-[40px] border border-[#E5E7EB] p-4 sm:p-6 md:p-10 lg:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.08)] overflow-hidden bg-[length:100%_100%] bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(${bgImage.src || bgImage})`,
+            backgroundImage: `url(src/assets/bg03.png)`,
+            backgroundSize:'contain',
           }}
         >
           {/* NOTE: Agar image ko bilkul raw dekhna hai toh niche wali line ko aise hi rehne dein (No White Mask Layer) */}
@@ -137,7 +138,7 @@ export default function RevenueLeakageSection() {
             {/* Middle Main Banner Area */}
             <div className="flex flex-col lg:flex-row items-center justify-between gap-6 md:gap-8 lg:gap-10">
               {/* Left Column: Pills & CTA */}
-              <div className="flex flex-row lg:flex-col flex-wrap justify-center items-center lg:items-start gap-3 sm:gap-4 md:gap-6 w-full lg:w-auto">
+              <div className="hidden md:flex flex-row lg:flex-col flex-wrap justify-center items-center lg:items-start gap-3 sm:gap-4 md:gap-6 w-full lg:w-auto">
                 <div className="flex flex-row lg:flex-col flex-wrap justify-center gap-2 sm:gap-3">
                   {[
                     "AI Powered",
@@ -176,14 +177,10 @@ export default function RevenueLeakageSection() {
             </div>
 
             {/* Mobile-only CTA */}
-            <div className="flex sm:hidden w-full justify-center">
-              <button className="group flex w-full py-[16px] px-[24px] text-[15px] font-bold text-white rounded-full bg-[#3C995B] hover:bg-[#32854d] shadow-[0_10px_20px_rgba(60,153,91,0.4)] transition-all duration-300 items-center justify-center gap-2 active:scale-[0.98]">
-                Fix Revenue Leakage
-              </button>
-            </div>
+           
 
             {/* Bottom Issues Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {groupedIssues.map((group, index) => (
                 <div
                   key={index}
@@ -193,9 +190,9 @@ export default function RevenueLeakageSection() {
                   <SubCardRow {...group.top} />
 
                   {/* Elegant Divider */}
-                  {/* <div className="relative w-full flex items-center justify-center">
-                    <div className="w-full h-[1px] bg-gray-200" />
-                    <div className="absolute h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                  <div className="relative w-full flex items-center justify-center">
+                    <div className="w-full h-[1px] bg-[#3C995B61]" />
+                    <div className="absolute h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-white border border-[#3C995B61] flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                       <div
                         className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[#3C995B]"
                         style={{
@@ -204,7 +201,7 @@ export default function RevenueLeakageSection() {
                         }}
                       />
                     </div>
-                  </div> */}
+                  </div>
 
                   {/* Bottom Issue */}
                   <SubCardRow {...group.bottom} />

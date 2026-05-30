@@ -3,7 +3,7 @@ import section027Img from '../../assets/Section-027.png';
 
 export default function WaveformDemoSection() {
   return (
-    <section className="relative w-full py-16 sm:py-24 bg-[#F8FAFC] overflow-hidden flex justify-center items-center min-h-[500px]">
+    <section className="relative w-full py-10 sm:py-24 bg-[#F8FAFC] overflow-hidden flex justify-center items-center min-h-[300px] md:min-h-[500px]">
       {/* Subtle Grid Background */}
       <div 
         className="absolute inset-0 z-0 opacity-[0.04]" 
@@ -21,7 +21,7 @@ export default function WaveformDemoSection() {
       <div className="relative z-10 w-[90%] max-w-[1000px] flex items-center justify-center">
         
         {/* The provided image which already contains the card, waveform, and dots */}
-        <video src="" className="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.1)] object-contain" />
+        <img src="src/assets/wave.png" className="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.1)] object-cover rounded-3xl border-2 border-black" />
 
         {/* Play Button Wrapper placed exactly in the center */}
         <button className="absolute inset-0 m-auto z-20 w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[160px] md:h-[160px] rounded-full bg-white/30 backdrop-blur-[2px] flex items-center justify-center group hover:scale-105 active:scale-95 transition-transform duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-white/50">

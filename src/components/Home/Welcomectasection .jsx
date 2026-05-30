@@ -15,20 +15,23 @@ export default function WelcomeCTASection() {
       initial={{ opacity: 0, y: 24 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="w-full px-4 sm:px-6 lg:px-8 overflow-x-hidden"
+      className="w-full px-4 sm:px-6 bg-cover  lg:px-8 overflow-x-hidden"
+       style={{ backgroundImage: `url(src/assets/foter.png)`,
+           
+           }}
     >
       <div className="max-w-[1320px] mx-auto">
         {/* Banner container with fixed background string interpolation (.src) */}
         <div 
-          className="relative w-full rounded-2xl sm:rounded-[32px] overflow-hidden bg-[#FAF8F5] bg-cover bg-center bg-no-repeat h-[200px] xs:h-[220px] sm:h-[300px] md:h-[380px] lg:h-[434px]"
-          style={{ backgroundImage: `url(${bgBannerImage.src})` }}
+          className="relative w-full rounded-2xl sm:rounded-[32px] overflow-hidden  bg-cover bg-center bg-no-repeat h-[200px] xs:h-[220px] sm:h-[300px] md:h-[380px] lg:h-[434px]"
+         
         >
 
           {/* Dark overlay for readability on small screens */}
           <div className="absolute inset-0 bg-black/20 sm:bg-transparent" />
 
           {/* CTA card — centered overlay */}
-          <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-8">
+          <div className="absolute inset-0 top-1/4 flex items-center justify-center px-4 sm:px-8">
             <div
               className="
                 w-full

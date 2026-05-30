@@ -45,7 +45,7 @@ const LanguageSwitcher = ({ openDropdown, toggleDropdown, dropdownId = 'language
       </button>
       {openDropdown === dropdownId && (
         <div className={`
-          absolute right-[-30px] mt-1 py-1 rounded-lg shadow-lg min-w-[200px] max-h-[60vh] overflow-y-auto z-50 bg-white border border-gray-200
+          absolute right-[-30px] overflow-x-hidden mt-1 py-1 rounded-lg shadow-lg min-w-[200px] max-h-[60vh] overflow-y-auto z-50 bg-white border border-gray-200
           [&::-webkit-scrollbar]:w-1
           [&::-webkit-scrollbar-track]:bg-transparent
           [&::-webkit-scrollbar-thumb]:bg-[#316945]

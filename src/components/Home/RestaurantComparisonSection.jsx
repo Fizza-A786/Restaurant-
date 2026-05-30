@@ -8,7 +8,7 @@ export default function RestaurantComparisonSection() {
         
         {/* Header Section */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="ttext-[26px] sm:text-[32px] md:text-[40px] lg:text-[42px]  text-black tracking-tight font-bold leading-[1.1] md:leading-tight mb-4">
+          <h2 className="text-[26px] sm:text-[32px] md:text-[40px] lg:text-[42px]  text-black tracking-tight font-bold leading-[1.1] md:leading-tight mb-4">
             Why Traditional Restaurant Communication Is Broken
           </h2>
           <p className="text-[13px] sm:text-lg text-gray-500 font-normal">
@@ -23,7 +23,7 @@ export default function RestaurantComparisonSection() {
           <div 
             className="relative bg-cover bg-center p-6 sm:p-10 lg:p-12 flex flex-col justify-between min-h-[400px] md:min-h-[500px] lg:min-h-auto"
             style={{ 
-              backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1000')` 
+              backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('src/assets/bgone.png')` 
               /* Replace with your local path: '../../assets/human-model.jpg' */
             }}
           >
@@ -76,7 +76,7 @@ export default function RestaurantComparisonSection() {
               className="relative w-full max-w-[280px] rounded-full px-5 py-2.5 backdrop-blur-md border border-white/30 text-[14px] sm:text-base text-gray-900 font-medium"
               style={{ background: 'rgba(255, 255, 255, 0.6)' }}
             >
-              Workflow efficiency: <span className="text-[#C84B31] font-bold">35% Effective</span>
+              <p className='text-nowrap'>Workflow efficiency:<span className="text-[#C84B31] font-semibold"> 35% Effective</span></p>
             </div>
           </div>
 
@@ -85,7 +85,8 @@ export default function RestaurantComparisonSection() {
           <div 
             className="relative bg-[#E8F3ED] bg-cover bg-center p-6 sm:p-10 lg:p-12 flex flex-col justify-between min-h-[550px] lg:min-h-auto overflow-hidden"
             style={{ 
-              backgroundImage: `url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=1000')`
+              backgroundImage: `url(src/assets/bgtwo.png)`,
+              backgroundSize:'cover',
               /* Replace with your local path if isolating the subject setup: '../../assets/ai-model.jpg' */
             }}
           >
@@ -103,10 +104,10 @@ export default function RestaurantComparisonSection() {
               </div>
               
               {/* Badges */}
-              <div className="flex flex-wrap gap-1.5">
-                <span className="bg-[#E2F2E9] text-[#2E7D46] border border-[#B6DEC5] px-2.5 py-1 rounded-full text-xs font-semibold">AI Powered</span>
-                <span className="bg-[#E2F2E9] text-[#2E7D46] border border-[#B6DEC5] px-2.5 py-1 rounded-full text-xs font-semibold">Real Time</span>
-                <span className="bg-[#E2F2E9] text-[#2E7D46] border border-[#B6DEC5] px-2.5 py-1 rounded-full text-xs font-semibold">Automation Enabled</span>
+              <div className="flex flex-wrap gap-[5px] sm:gap-1.5">
+                <span className="bg-[#E2F2E9] text-[#2E7D46] border border-[#B6DEC5] px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold">AI Powered</span>
+                <span className="bg-[#E2F2E9] text-[#2E7D46] border border-[#B6DEC5] px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold">Real Time</span>
+                <span className="bg-[#E2F2E9] text-[#2E7D46] border border-[#B6DEC5] px-2.5 py-1 rounded-full text-[10px] md:text-xs font-semibold">Automation Enabled</span>
               </div>
             </div>
 
@@ -138,33 +139,33 @@ export default function RestaurantComparisonSection() {
                 </div>
               </div>
 
-              <ul className="space-y-3.5 text-gray-800 font-medium text-[15px] sm:text-base">
-                <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
+              <ul className="space-y-2 md:space-y-3.5 text-gray-800 font-medium text-[15px] sm:text-base">
+                <li className="flex items-start text-[14px] md:text-[16px] gap-2.5">
+                  <span className="w-1.5  h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
                   24/7 order handling
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-2.5 text-[14px] md:text-[16px]">
+                  <span className="w-1.5  h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
                   No missed calls during peak hours
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-2.5 text-[14px] md:text-[16px]">
+                  <span className="w-1.5  h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
                   Instant order capture and routing
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-2.5 text-[14px] md:text-[16px]">
+                  <span className="w-1.5  h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
                   Automatic CRM and order logging
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-2.5 text-[14px] md:text-[16px]">
+                  <span className="w-1.5  h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
                   Structured customer data insights
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-2.5 text-[14px] md:text-[16px]">
+                  <span className="w-1.5  h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
                   Real-time sentiment and behavior tracking
                 </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-2.5 text-[14px] md:text-[16px]">
+                  <span className="w-1.5  h-1.5 rounded-full bg-gray-800 mt-2 flex-shrink-0" />
                   Revenue recovery automation
                 </li>
               </ul>
