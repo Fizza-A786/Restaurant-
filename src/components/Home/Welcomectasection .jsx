@@ -2,8 +2,8 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-// Importing from src/assets/bg.png
-import bgBannerImage from '../../assets/bg.png'
+// Using your local asset containing the built-in white box card
+import bgBannerImage from '../../assets/foter.png'
 
 export default function WelcomeCTASection() {
   const ref = useRef(null)
@@ -15,120 +15,81 @@ export default function WelcomeCTASection() {
       initial={{ opacity: 0, y: 24 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="w-full px-4 sm:px-6 bg-cover  lg:px-8 overflow-x-hidden"
-       style={{ backgroundImage: `url(src/assets/foter.png)`,
-           
-           }}
+      className="w-full px-4 sm:px-6 lg:px-8 overflow-x-hidden my-8"
     >
       <div className="max-w-[1320px] mx-auto">
-        {/* Banner container with fixed background string interpolation (.src) */}
+        {/* Main Banner Wrapper */}
         <div 
-          className="relative w-full rounded-2xl sm:rounded-[32px] overflow-hidden  bg-cover bg-center bg-no-repeat h-[200px] xs:h-[220px] sm:h-[300px] md:h-[380px] lg:h-[434px]"
-         
+          className="relative w-full rounded-2xl sm:rounded-[32px] overflow-hidden bg-cover bg-center bg-no-repeat h-[180px] xs:h-[220px] sm:h-[300px] md:h-[380px] lg:h-[450px]"
+          style={{ backgroundImage: `url(${bgBannerImage.src || bgBannerImage})` }}
         >
-
-          {/* Dark overlay for readability on small screens */}
-          <div className="absolute inset-0 bg-black/20 sm:bg-transparent" />
-
-          {/* CTA card — centered overlay */}
-          <div className="absolute inset-0 top-1/4 flex items-center justify-center px-4 sm:px-8">
-            <div
-              className="
-                w-full
-                max-w-[min(419px,90%)]
-                sm:max-w-[480px]
-                md:max-w-[520px]
-                rounded-2xl sm:rounded-[20px]
-                px-5 py-5
-                sm:px-8 sm:py-7
-                flex flex-col items-center gap-4 sm:gap-5
-              "
-              style={{
-                background: 'rgba(255, 255, 255, 0.92)',
-                backdropFilter: 'blur(2px)',
-                WebkitBackdropFilter: 'blur(2px)',
-              }}
-            >
-              {/* Headline */}
-              <div className="flex flex-col items-center gap-1 sm:gap-2 text-center">
+          
+          {/* TEXT & BUTTON OVERLAY */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 pt-1 xs:pt-2 sm:pt-4 md:pt-5">
+            <div className="w-full max-w-[240px] xs:max-w-[290px] sm:max-w-[390px] md:max-w-[460px] flex flex-col items-center gap-1.5 sm:gap-3 md:gap-4 text-center">
+              
+              {/* Responsive Headline Group */}
+              <div className="flex flex-col items-center gap-0 sm:gap-0.5 w-full select-none">
                 <h2
-                  className="text-black font-medium leading-tight m-0"
-                  style={{ fontSize: 'clamp(16px, 3.5vw, 24px)' }}
+                  className="text-gray-900 font-bold leading-tight m-0 tracking-tight"
+                  style={{ fontSize: 'clamp(11px, 3.4vw, 22px)' }}
                 >
                   Let AI Run Your Orders -
                 </h2>
                 <div
-                  className="text-black font-medium leading-tight m-0 flex items-center gap-2 flex-wrap justify-center"
-                  style={{ fontSize: 'clamp(16px, 3.5vw, 24px)' }}
+                  className="text-gray-900 font-bold leading-tight m-0 flex items-center justify-center gap-1 flex-wrap tracking-tight"
+                  style={{ fontSize: 'clamp(11px, 3.4vw, 22px)' }}
                 >
                   So You Can Focus on&nbsp;
-                  <span className="relative inline-block">
+                  <span>
                     Customers
-                    {/* Green underline accent */}
-                    <span
-                      className="absolute left-0"
-                      style={{
-                        height: 'clamp(3px, 0.5vw, 5px)',
-                        background: '#3C995B',
-                        borderRadius: '2px',
-                        bottom: '-3px',
-                        width: '100%',
-                      }}
-                      aria-hidden="true"
-                    />
                   </span>
                 </div>
               </div>
 
-              {/* Buttons */}
-              <div className="flex flex-row  mt-3 justify-center gap-3 sm:gap-4 w-full">
-                {/* Primary — Start Free Trial */}
+              {/* Action Buttons Row */}
+              <div className="flex flex-row justify-center gap-1.5 sm:gap-2.5 w-full px-2 sm:px-6">
+                {/* Primary Button — Start Free Trial */}
                 <a
                   href="/signup"
-                  className="
-                    inline-flex items-center justify-center
-                    rounded-xl
-                    font-medium no-underline
-                    transition-opacity hover:opacity-90 active:scale-[0.98]
-                    whitespace-nowrap
-                  "
+                  className="flex-1 inline-flex items-center justify-center rounded-md sm:rounded-lg font-semibold no-underline transition-all duration-200 hover:opacity-90 active:scale-[0.97] whitespace-nowrap text-center"
                   style={{
-                    padding: 'clamp(10px, 1.5vw, 14px) clamp(20px, 3vw, 32px)',
-                    fontSize: 'clamp(13px, 2vw, 17px)',
+                    // Increased first parameter here for more vertical padding (py)
+                    padding: 'clamp(6px, 1.4vw, 12px) clamp(4px, 1.2vw, 12px)',
+                    fontSize: 'clamp(8px, 1.8vw, 13px)',
                     background: 'radial-gradient(ellipse at 40% 15%, rgba(175,217,177,0.95) 0%, rgba(60,153,91,0.95) 100%)',
-                    color: '#000',
-                    border: '1px solid #fff',
-                    boxShadow: '0 0 30px rgba(0,0,0,0.12)',
-                    minHeight: 'clamp(38px, 6vw, 52px)',
+                    color: '#000000',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    boxShadow: '0 1px 4px rgba(60,153,91,0.12)',
+                    // Increased minHeight slightly to respect the taller py scale
+                    minHeight: 'clamp(24px, 5vw, 42px)',
                   }}
                 >
                   Start Free Trial
                 </a>
 
-                {/* Secondary — Book a Demo */}
+                {/* Secondary Button — Book a Demo */}
                 <a
                   href="/contact"
-                  className="
-                    inline-flex items-center justify-center
-                    rounded-xl
-                    font-medium no-underline
-                    transition-colors hover:bg-gray-50 active:scale-[0.98]
-                    whitespace-nowrap
-                  "
+                  className="flex-1 inline-flex items-center justify-center rounded-md sm:rounded-lg font-semibold no-underline transition-all duration-200 hover:bg-gray-50 active:scale-[0.97] whitespace-nowrap text-center"
                   style={{
-                    padding: 'clamp(10px, 1.5vw, 14px) clamp(20px, 3vw, 32px)',
-                    fontSize: 'clamp(13px, 2vw, 17px)',
-                    background: '#fff',
+                    // Increased first parameter here for more vertical padding (py)
+                    padding: 'clamp(6px, 1.4vw, 12px) clamp(4px, 1.2vw, 12px)',
+                    fontSize: 'clamp(8px, 1.8vw, 13px)',
+                    background: '#ffffff',
                     color: '#3C995B',
                     border: '1px solid #3C995B',
-                    minHeight: 'clamp(38px, 6vw, 52px)',
+                    // Increased minHeight slightly to respect the taller py scale
+                    minHeight: 'clamp(24px, 5vw, 42px)',
                   }}
                 >
                   Book a Demo
                 </a>
               </div>
+
             </div>
           </div>
+
         </div>
       </div>
     </motion.section> 
